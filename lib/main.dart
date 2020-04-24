@@ -27,12 +27,19 @@ class _MyAppState extends State<MyApp> {
       model: _model,
       child: MaterialApp(
         theme: ThemeData(
-          primaryColor: Color(0xff2b2d5d),
+          // primaryColor: Color(0xff2b2d5d),
+          primaryColor: Color(0xff151716),
+          cardColor: Color(0xff1e1f21),
           accentColor: Colors.white,
+          appBarTheme: AppBarTheme(
+            color: Color(0xff1e1f21),
+          ),
+          bottomAppBarColor: Color(0xff1e1f21),
+          buttonColor: Color(0xff2a2b2d),
         ),
         debugShowCheckedModeBanner: false,
         routes: {
-          '/': (BuildContext context) => SplashScreen(),
+          '/': (BuildContext context) => SplashScreen(_model),
         },
       ),
     );

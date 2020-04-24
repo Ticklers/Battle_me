@@ -1,7 +1,14 @@
+import 'dart:async';
+
 import 'package:battle_me/helpers/dimensions.dart';
+import 'package:battle_me/scoped_models/main_scoped_model.dart';
+import 'package:battle_me/screens/home_screen.dart';
+import 'package:battle_me/widgets/animations/navigation_animation.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
+  final MainModel model;
+  SplashScreen(this.model);
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -27,6 +34,14 @@ class _SplashScreenState extends State<SplashScreen>
         curve: Curves.elasticInOut,
       ),
     );
+    Timer(Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        NavigationAnimationRoute(
+          widget: HomeScreen(widget.model),
+        ),
+      );
+    });
   }
 
   @override
@@ -34,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
         backgroundColor: Colors.black,
         body: Container(
-          decoration: BoxDecoration(color: Colors.black),
+          // decoration: BoxDecoration(color: Theme.of(context).primaryColor),
           child: Stack(children: <Widget>[
             SlideTransition(
               position: _offsetAnimation,
