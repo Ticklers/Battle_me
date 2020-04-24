@@ -3,6 +3,7 @@ import 'package:battle_me/screens/battle_screen.dart';
 import 'package:battle_me/screens/popular_meme.dart';
 import 'package:battle_me/screens/profile_screen.dart';
 import 'package:battle_me/widgets/animations/navigation_animation.dart';
+import 'package:battle_me/widgets/utilities/meme_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 // import 'package:flutter/scheduler.dart';
@@ -68,7 +69,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget body() {
     return Stack(
-      children: <Widget>[],
+      children: <Widget>[
+        ListView.builder(
+          itemCount: 5,
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          physics: BouncingScrollPhysics(),
+          itemBuilder: (BuildContext context, int index) {
+            return MemeCard(); // Add Card
+          },
+        )
+      ],
     );
   }
 
@@ -82,6 +92,14 @@ class _HomeScreenState extends State<HomeScreen> {
           // drawer: SideDrawer(),
           appBar: _showAppbar
               ? AppBar(
+                  leading: Hero(
+                    tag: "icon",
+                    child: Container(
+                      // height: getDeviceHeight(context) * 0.60,
+                      // width: getDeviceWidth(context) * 0.60,
+                      child: Image.asset('assets/images/icon.png'),
+                    ),
+                  ),
                   title: Text('Home Screen'),
                   backgroundColor: Theme.of(context).appBarTheme.color,
                 )

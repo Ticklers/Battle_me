@@ -5,7 +5,7 @@ class NavigationAnimationRoute extends PageRouteBuilder {
 
   NavigationAnimationRoute({this.widget})
       : super(
-          transitionDuration: Duration(milliseconds: 500),
+          transitionDuration: Duration(milliseconds: 1000),
           transitionsBuilder: (BuildContext context,
               Animation<double> animation,
               Animation<double> secAnimation,
