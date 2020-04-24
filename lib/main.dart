@@ -1,4 +1,5 @@
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
+import 'package:battle_me/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -26,12 +27,12 @@ class _MyAppState extends State<MyApp> {
       model: _model,
       child: MaterialApp(
         theme: ThemeData(
-          primaryColor: Color(0xff0079f5),
-          accentColor: Colors.blue,
+          primaryColor: Color(0xff2b2d5d),
+          accentColor: Colors.white,
         ),
         debugShowCheckedModeBanner: false,
         routes: {
-          // '/': (BuildContext context) => SplashPage(_model),
+          '/': (BuildContext context) => SplashScreen(),
         },
       ),
     );
