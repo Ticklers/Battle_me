@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:battle_me/helpers/dimensions.dart';
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
-import 'package:battle_me/screens/home_screen.dart';
+import 'package:battle_me/screens/auth_screen.dart';
 import 'package:battle_me/widgets/animations/navigation_animation.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.pushReplacement(
         context,
         NavigationAnimationRoute(
-          widget: HomeScreen(widget.model),
+          widget: AuthScreen(),
         ),
       );
     });

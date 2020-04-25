@@ -1,4 +1,8 @@
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
+import 'package:battle_me/screens/battle_screen.dart';
+import 'package:battle_me/screens/home_screen.dart';
+import 'package:battle_me/screens/popular_meme.dart';
+import 'package:battle_me/screens/profile_screen.dart';
 import 'package:battle_me/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -40,6 +44,10 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         routes: {
           '/': (BuildContext context) => SplashScreen(_model),
+          '/home': (BuildContext context) => HomeScreen(_model),
+          '/trend': (BuildContext context) => TrendingScreen(),
+          '/profile': (BuildContext context) => ProfileScreen(),
+          '/battle': (BuildContext context) => BattleScreen(),
         },
       ),
     );

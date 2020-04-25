@@ -6,4 +6,5 @@ class ConnectedModel extends Model {
   final uri = ApiKeys.uri;
   bool isLoading = false;
   File file = null;
+  int bottom_navbar_index = 0;
 }
