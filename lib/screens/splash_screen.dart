@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.pushReplacement(
         context,
         NavigationAnimationRoute(
-          widget: AuthScreen(),
+          widget: AuthScreen(widget.model),
         ),
       );
     });
