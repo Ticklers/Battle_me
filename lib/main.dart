@@ -5,6 +5,7 @@ import 'package:battle_me/screens/popular_meme.dart';
 import 'package:battle_me/screens/profile_screen.dart';
 import 'package:battle_me/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 void main() {
@@ -22,6 +23,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    _model.autoAuthenticate();
+    _model.fetchMeme('feed');
     super.initState();
   }
 
@@ -38,6 +41,7 @@ class _MyAppState extends State<MyApp> {
           appBarTheme: AppBarTheme(
             color: Color(0xff1e1f21),
           ),
+          cursorColor: Colors.blue,
           bottomAppBarColor: Color(0xff1e1f21),
           buttonColor: Color(0xff2a2b2d),
         ),

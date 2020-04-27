@@ -5,6 +5,7 @@ import 'package:battle_me/scoped_models/main_scoped_model.dart';
 import 'package:battle_me/screens/home_screen.dart';
 import 'package:battle_me/widgets/animations/navigation_animation.dart';
 import 'package:battle_me/widgets/animations/teddy_animation.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -25,8 +26,7 @@ class _AuthScreenState extends State<AuthScreen> {
   };
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool isemailValid = true;
-  bool ispasswordValid = true;
+  bool isAuthenticated = true;
   bool _obscureText = true;
 
   bool isLoading = false;
@@ -161,17 +161,23 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _submitForm() async {
+    setState(() {
+      isLoading = true;
+    });
     if (!_formKey.currentState.validate()) {
       return;
     }
     _formKey.currentState.save();
     FocusScope.of(context).requestFocus(FocusNode());
-
+    isAuthenticated = await widget.model
+        .userLogin(_loginCredentials["email"], _loginCredentials["password"]);
+    print("after response");
+    print(isAuthenticated);
     setState(() {
-      if (_loginCredentials["email"] == 'Rishabh' &&
-          _loginCredentials["password"] == "Sharma") {
+      if (isAuthenticated) {
         animation = 'success';
-        Timer(Duration(seconds: 3), () {
+        Timer(Duration(milliseconds: 1500), () {
+          isLoading = false;
           Navigator.pushReplacement(
             context,
             NavigationAnimationRoute(
@@ -180,8 +186,9 @@ class _AuthScreenState extends State<AuthScreen> {
           );
         });
       } else {
+        isLoading = false;
         animation = 'fail';
-        errorMsg = "Something is wrong !";
+        errorMsg = "Wrong credentials !";
         print('Login Unsuccessful');
       }
     });
@@ -205,9 +212,11 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         child: Center(
           child: isLoading
-              ? CircularProgressIndicator(
-                  value: null,
-                  backgroundColor: Colors.white,
+              ? FlareActor(
+                  "assets/flare/Loader.flr",
+                  animation: 'start',
+                  fit: BoxFit.contain,
+                  color: Colors.white,
                 )
               : Text(
                   "SignIn",

@@ -1,4 +1,5 @@
 import 'package:battle_me/helpers/dimensions.dart';
+import 'package:battle_me/helpers/my_flutter_app_icons.dart';
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
 import 'package:battle_me/screens/battle_screen.dart';
 import 'package:battle_me/screens/home_screen.dart';
@@ -7,99 +8,6 @@ import 'package:battle_me/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:page_transition/page_transition.dart';
-
-// class BottomNavbar extends StatelessWidget {
-//   final current_index;
-//   BottomNavbar(this.current_index);
-//   @override
-//   Widget build(BuildContext context) {
-//     return ScopedModelDescendant<MainModel>(
-//       builder: (BuildContext context, Widget child, MainModel model) {
-//         return Theme(
-//           data: Theme.of(context).copyWith(
-//             canvasColor: Theme.of(context).bottomAppBarColor,
-//             primaryColor: Colors.yellow,
-//           ),
-//           child: Container(
-//             height: getDeviceHeight(context) * 0.09,
-//             width: MediaQuery.of(context).size.width,
-//             child: BottomNavigationBar(
-//               backgroundColor: Theme.of(context).bottomAppBarColor,
-//               onTap: (index) {
-//                 model.bottom_navbar_index = index;
-//                 switch (index.toString()) {
-//                   case "1":
-//                     {
-//                       if (current_index != 1) {
-//                         Navigator.pushNamed(context, '/trend');
-//                       }
-//                     }
-//                     break;
-
-//                   case "2":
-//                     {
-//                       if (current_index != 2) {
-//                         Navigator.pushNamed(context, '/battle');
-//                       }
-//                     }
-//                     break;
-
-//                   case "3":
-//                     {
-//                       if (current_index != 3) {
-//                         Navigator.pushNamed(context, '/profile');
-//                       }
-//                     }
-//                     break;
-//                   default:
-//                     {
-//                       if (current_index != 0) {
-//                         Navigator.pushNamed(context, '/home', arguments: model);
-//                       }
-//                     }
-//                     break;
-//                 }
-//               },
-//               unselectedItemColor: Colors.white,
-//               selectedItemColor: Colors.red,
-//               iconSize: getDeviceHeight(context) * 0.04,
-//               currentIndex: model
-//                   .bottom_navbar_index, // this will be set when a new tab is tapped
-//               items: [
-//                 BottomNavigationBarItem(
-//                   icon: new Icon(Icons.home),
-//                   title: new Text('', style: TextStyle(fontSize: 0)),
-//                 ),
-//                 BottomNavigationBarItem(
-//                   icon: new Icon(
-//                     Icons.search,
-//                   ),
-//                   title: new Text('', style: TextStyle(fontSize: 0)),
-//                 ),
-//                 BottomNavigationBarItem(
-//                   icon: new Icon(
-//                     Icons.notifications_none,
-//                   ),
-//                   title: new Text('', style: TextStyle(fontSize: 0)),
-//                 ),
-//                 BottomNavigationBarItem(
-//                   icon: new Icon(
-//                     Icons.mail,
-//                     size: getViewportHeight(context) * 0.035,
-//                   ),
-//                   title: new Text(
-//                     '',
-//                     style: TextStyle(fontSize: 0),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
 
 class BottomNavbar extends StatelessWidget {
   final current_index;
@@ -111,7 +19,6 @@ class BottomNavbar extends StatelessWidget {
         return Theme(
           data: Theme.of(context).copyWith(
             canvasColor: Theme.of(context).bottomAppBarColor,
-            primaryColor: Colors.yellow,
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -125,7 +32,6 @@ class BottomNavbar extends StatelessWidget {
             height: getDeviceHeight(context) * 0.09,
             width: MediaQuery.of(context).size.width,
             child: BottomNavigationBar(
-              backgroundColor: Theme.of(context).bottomAppBarColor,
               onTap: (index) {
                 model.bottom_navbar_index = index;
                 switch (index.toString()) {
@@ -135,27 +41,26 @@ class BottomNavbar extends StatelessWidget {
                         Navigator.push(
                           context,
                           PageTransition(
-                            child: TrendingScreen(),
-                            type: PageTransitionType.rotate,
+                            child: BattleScreen(),
+                            type: PageTransitionType.fade,
                             duration: Duration(milliseconds: 300),
                           ),
                         );
                       }
                     }
                     break;
-
                   case "2":
                     {
-                      if (current_index != 2) {
-                        Navigator.push(
-                          context,
-                          PageTransition(
-                            child: BattleScreen(),
-                            type: PageTransitionType.rotate,
-                            duration: Duration(milliseconds: 300),
-                          ),
-                        );
-                      }
+                      // if (current_index != 3) {
+                      //   Navigator.push(
+                      //     context,
+                      //     PageTransition(
+                      //       child: ProfileScreen(),
+                      //       type: PageTransitionType.fade,
+                      //       duration: Duration(milliseconds: 300),
+                      //     ),
+                      //   );
+                      // }
                     }
                     break;
 
@@ -165,14 +70,30 @@ class BottomNavbar extends StatelessWidget {
                         Navigator.push(
                           context,
                           PageTransition(
-                            child: ProfileScreen(),
-                            type: PageTransitionType.rotate,
+                            child: TrendingScreen(),
+                            type: PageTransitionType.fade,
                             duration: Duration(milliseconds: 300),
                           ),
                         );
                       }
                     }
                     break;
+
+                  case "4":
+                    {
+                      if (current_index != 4) {
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            child: ProfileScreen(),
+                            type: PageTransitionType.fade,
+                            duration: Duration(milliseconds: 300),
+                          ),
+                        );
+                      }
+                    }
+                    break;
+
                   default:
                     {
                       if (current_index != 0) {
@@ -180,7 +101,7 @@ class BottomNavbar extends StatelessWidget {
                           context,
                           PageTransition(
                             child: HomeScreen(model),
-                            type: PageTransitionType.rotate,
+                            type: PageTransitionType.fade,
                             duration: Duration(milliseconds: 300),
                           ),
                         );
@@ -190,10 +111,10 @@ class BottomNavbar extends StatelessWidget {
                 }
               },
               unselectedItemColor: Colors.white,
-              selectedItemColor: Colors.red,
+              selectedItemColor: Colors.blue,
               iconSize: getDeviceHeight(context) * 0.04,
-              currentIndex: model
-                  .bottom_navbar_index, // this will be set when a new tab is tapped
+              currentIndex:
+                  current_index, // this will be set when a new tab is tapped
               items: [
                 BottomNavigationBarItem(
                   icon: new Icon(Icons.home),
@@ -201,19 +122,25 @@ class BottomNavbar extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   icon: new Icon(
-                    Icons.search,
+                    MyFlutterApp.battle,
                   ),
                   title: new Text('', style: TextStyle(fontSize: 0)),
                 ),
                 BottomNavigationBarItem(
                   icon: new Icon(
-                    Icons.notifications_none,
+                    MyFlutterApp.add,
                   ),
                   title: new Text('', style: TextStyle(fontSize: 0)),
                 ),
                 BottomNavigationBarItem(
                   icon: new Icon(
-                    Icons.mail,
+                    MyFlutterApp.trending,
+                  ),
+                  title: new Text('', style: TextStyle(fontSize: 0)),
+                ),
+                BottomNavigationBarItem(
+                  icon: new Icon(
+                    MyFlutterApp.user,
                     size: getViewportHeight(context) * 0.035,
                   ),
                   title: new Text(

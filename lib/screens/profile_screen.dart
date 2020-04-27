@@ -10,7 +10,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavbar(3),
+      backgroundColor: Theme.of(context).primaryColor,
+      bottomNavigationBar: BottomNavbar(4),
       body: Center(child: Text('Profile Screen')),
     );
   }
