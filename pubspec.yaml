@@ -30,6 +30,7 @@ dependencies:
   mime: ^0.9.6+3
   page_transition:
   flare_flutter:
+  image_picker:
 
 dev_dependencies:
   flutter_test:

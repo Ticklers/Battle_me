@@ -55,7 +55,7 @@ class BottomNavbar extends StatelessWidget {
                       Navigator.push(
                         context,
                         PageTransition(
-                          child: CreateMeme(),
+                          child: CreateMeme(model),
                           type: PageTransitionType.fade,
                           duration: Duration(milliseconds: 300),
                         ),
