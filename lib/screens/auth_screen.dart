@@ -314,7 +314,6 @@ class _AuthScreenState extends State<AuthScreen> {
     viewportWidth = getViewportWidth(context);
     viewportHeight = getViewportHeight(context);
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
       body: GestureDetector(
         onTap: () {
           setState(() {

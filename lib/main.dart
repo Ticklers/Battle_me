@@ -44,6 +44,8 @@ class _MyAppState extends State<MyApp> {
           cursorColor: Colors.blue,
           bottomAppBarColor: Color(0xff1e1f21),
           buttonColor: Color(0xff2a2b2d),
+          scaffoldBackgroundColor: Color(0xff2b2d5d),
+          dividerColor: Colors.white,
         ),
         debugShowCheckedModeBanner: false,
         routes: {

@@ -2,6 +2,7 @@ import 'package:battle_me/helpers/dimensions.dart';
 import 'package:battle_me/helpers/my_flutter_app_icons.dart';
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
 import 'package:battle_me/screens/battle_screen.dart';
+import 'package:battle_me/screens/create_meme.dart';
 import 'package:battle_me/screens/home_screen.dart';
 import 'package:battle_me/screens/popular_meme.dart';
 import 'package:battle_me/screens/profile_screen.dart';
@@ -51,16 +52,14 @@ class BottomNavbar extends StatelessWidget {
                     break;
                   case "2":
                     {
-                      // if (current_index != 3) {
-                      //   Navigator.push(
-                      //     context,
-                      //     PageTransition(
-                      //       child: ProfileScreen(),
-                      //       type: PageTransitionType.fade,
-                      //       duration: Duration(milliseconds: 300),
-                      //     ),
-                      //   );
-                      // }
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          child: CreateMeme(),
+                          type: PageTransitionType.fade,
+                          duration: Duration(milliseconds: 300),
+                        ),
+                      );
                     }
                     break;
 

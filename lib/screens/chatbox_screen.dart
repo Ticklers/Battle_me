@@ -56,7 +56,6 @@ class _ChatBoxScreenState extends State<ChatBoxScreen> {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
         return Scaffold(
-          backgroundColor: Theme.of(context).primaryColor,
           appBar: AppBar(
             title: Text('Chats'),
           ),

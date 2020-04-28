@@ -1,6 +1,7 @@
 import 'package:battle_me/screens/chatbox_screen.dart';
 import 'package:battle_me/widgets/utilities/bottom_navbar.dart';
 import 'package:battle_me/widgets/utilities/meme_card.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:page_transition/page_transition.dart';
@@ -22,18 +23,27 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Widget body() {
-    return Stack(
-      children: <Widget>[
-        ListView.builder(
-          itemCount: widget.model.getFeedList.length,
-          padding: EdgeInsets.symmetric(horizontal: 5),
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) {
-            return MemeCard(index, widget.model); // Add Card
-          },
-        )
-      ],
-    );
+    return widget.model.isLoading
+        ? Center(
+            child: FlareActor(
+              "assets/flare/Loader.flr",
+              animation: 'start',
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+          )
+        : Stack(
+            children: <Widget>[
+              ListView.builder(
+                itemCount: widget.model.getFeedList.length,
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return MemeCard(index, widget.model); // Add Card
+                },
+              )
+            ],
+          );
   }
 
   @override
@@ -63,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       context,
                       PageTransition(
                         child: ChatBoxScreen(),
-                        type: PageTransitionType.rotate,
+                        type: PageTransitionType.fade,
                         duration: Duration(milliseconds: 300),
                       ),
                     );
@@ -72,7 +82,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             backgroundColor: Theme.of(context).appBarTheme.color,
           ),
           bottomNavigationBar: BottomNavbar(0),
-          body: body(),
+          body: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(FocusNode());
+              },
+              child: body()),
         );
       },
     );

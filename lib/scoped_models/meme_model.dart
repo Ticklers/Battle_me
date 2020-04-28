@@ -68,36 +68,61 @@ class MemeModel extends ConnectedModel {
     });
   }
 
-  // Future<String> createMeme(String text, String token) async {
-  //   isLoading = true;
-  //   notifyListeners();
-  //   print('Inside create meme : ' + isLoading.toString());
-  //   Map<String, dynamic> req = {
-  //     'text': text,
-  //     'mediaLinks': '',
-  //   };
-  //   try {
-  //     http.Response response = await http
-  //         .post('${uri}api/memes/post', body: json.encode(req), headers: {
-  //       'Content-Type': 'application/json'
-  //       // 'Authorization': token,
-  //     });
-  //     Map<String, dynamic> res;
-  //     if (response.statusCode == 200) {
-  //       res = json.decode(response.body);
-  //       print(res);
+  Future<String> createMeme(
+      {String caption, String token, String userId, String mode}) async {
+    isLoading = true;
+    notifyListeners();
+    bool onProfile = false;
+    bool isBattle = false;
+    bool isRoast = false;
+    print('Inside create meme : ' + isLoading.toString());
+    switch (mode) {
+      case "isBattle":
+        {
+          isBattle = true;
+        }
+        break;
+      case "isRoast":
+        {
+          isRoast = true;
+        }
+        break;
+      default:
+        {
+          onProfile = true;
+        }
+        break;
+    }
+    Map<String, dynamic> req = {
+      "isBattle": isBattle,
+      "isRoast": isRoast,
+      "onProfile": onProfile,
+      "caption": caption,
+      "user": userId,
+      "likes": [],
+      "comments": []
+    };
+    try {
+      http.Response response = await http
+          .post('${uri}api/memes/post', body: json.encode(req), headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      });
+      Map<String, dynamic> res;
+      if (response.statusCode == 200) {
+        res = json.decode(response.body);
+        print(res);
 
-  //       isLoading = false;
-  //       notifyListeners();
-  //     }
-  //     print(res['_id']);
-  //     return res['_id'];
-  //   } catch (error) {
-  //     print("Error in composing meme :  " + error.toString());
-  //     isLoading = false;
-  //     notifyListeners();
-  //     return null;
-  //   }
-  // }
-
+        isLoading = false;
+        notifyListeners();
+      }
+      print(res['_id']);
+      return res['_id'];
+    } catch (error) {
+      print("Error in composing meme :  " + error.toString());
+      isLoading = false;
+      notifyListeners();
+      return null;
+    }
+  }
 }
