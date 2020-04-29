@@ -1,3 +1,4 @@
+import 'package:battle_me/screens/auth_screen.dart';
 import 'package:battle_me/screens/chatbox_screen.dart';
 import 'package:battle_me/widgets/utilities/bottom_navbar.dart';
 import 'package:battle_me/widgets/utilities/meme_card.dart';
@@ -25,11 +26,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget body() {
     return widget.model.isLoading
         ? Center(
-            child: FlareActor(
-              "assets/flare/Loader.flr",
-              animation: 'start',
-              fit: BoxFit.contain,
-              color: Colors.white,
+            child: Container(
+              height: 50,
+              width: 70,
+              child: FlareActor(
+                "assets/flare/Loader.flr",
+                animation: 'start',
+                fit: BoxFit.contain,
+                color: Colors.white,
+              ),
             ),
           )
         : Stack(
@@ -64,20 +69,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             title: Text('Home Screen'),
             actions: <Widget>[
               IconButton(
-                  icon: Icon(
-                    Icons.send,
-                    color: Theme.of(context).accentColor,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        child: ChatBoxScreen(),
-                        type: PageTransitionType.fade,
-                        duration: Duration(milliseconds: 300),
-                      ),
-                    );
-                  })
+                icon: Icon(
+                  Icons.send,
+                  color: Theme.of(context).accentColor,
+                ),
+                onPressed: () {
+                  widget.model.logout();
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      child: AuthScreen(widget.model),
+                      type: PageTransitionType.fade,
+                      duration: Duration(milliseconds: 300),
+                    ),
+                  );
+                },
+              ),
             ],
             backgroundColor: Theme.of(context).appBarTheme.color,
           ),

@@ -1,3 +1,4 @@
+import 'package:battle_me/helpers/my_flutter_app_icons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:battle_me/helpers/dimensions.dart';
@@ -33,48 +34,58 @@ class _MediaScreenState extends State<MediaScreen> {
     return SingleChildScrollView(
       child: Container(
         // color: Colors.yellow,
-        height: getDeviceHeight(context) * 0.4,
+        // height: getDeviceHeight(context) * 0.4,
         width: getDeviceWidth(context),
         child: Column(
           children: <Widget>[
             _image == null
-                ? Text(
-                    'No media selected.',
-                    style: TextStyle(color: Theme.of(context).accentColor),
+                ? Container(
+                    height: getViewportHeight(context) * 0.5,
+                    width: getViewportWidth(context),
+                    color: Theme.of(context).accentColor.withOpacity(0.5),
+                    child: Center(
+                      child: Text(
+                        'No media selected.',
+                        style: TextStyle(color: Theme.of(context).accentColor),
+                      ),
+                    ),
                   )
                 : Container(
                     // color: Colors.yellow,
-                    height: 200,
-                    width: 300,
+                    height: getViewportHeight(context) * 0.5,
+                    width: getViewportWidth(context),
                     child: Image.file(_image),
                   ),
             SizedBox(height: getDeviceHeight(context) * 0.05),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    getImage(context, ImageSource.gallery);
-                  },
-                  tooltip: 'Pick Image from gallery',
-                  icon: Icon(
-                    Icons.image,
-                    size: 50,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  IconButton(
+                    onPressed: () {
+                      getImage(context, ImageSource.gallery);
+                    },
+                    tooltip: 'Pick Image from gallery',
+                    icon: Icon(
+                      MyFlutterApp.picture,
+                      size: 50,
+                    ),
+                    color: Theme.of(context).accentColor,
                   ),
-                  color: Theme.of(context).accentColor,
-                ),
-                IconButton(
-                  onPressed: () {
-                    getImage(context, ImageSource.camera);
-                  },
-                  tooltip: 'Click a new image',
-                  icon: Icon(
-                    Icons.add_a_photo,
-                    size: 50,
-                  ),
-                  color: Theme.of(context).accentColor,
-                )
-              ],
+                  IconButton(
+                    onPressed: () {
+                      getImage(context, ImageSource.camera);
+                    },
+                    tooltip: 'Click a new image',
+                    icon: Icon(
+                      MyFlutterApp.camera,
+                      size: 50,
+                    ),
+                    color: Theme.of(context).accentColor,
+                  )
+                ],
+              ),
             ),
           ],
         ),

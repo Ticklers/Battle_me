@@ -108,7 +108,8 @@ class MemeModel extends ConnectedModel {
         'Content-Type': 'application/json',
         'Authorization': token,
       });
-      Map<String, dynamic> res;
+      Map<String, dynamic> res = json.decode(response.body);
+      ;
       if (response.statusCode == 200) {
         res = json.decode(response.body);
         print(res);
@@ -123,6 +124,48 @@ class MemeModel extends ConnectedModel {
       isLoading = false;
       notifyListeners();
       return null;
+    }
+  }
+
+  Future<Null> likeMeme({String memeId, String token}) async {
+    print('Inside Like meme');
+    try {
+      http.Response response =
+          await http.post('${uri}api/addons/like/${memeId}', headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      });
+      Map<String, dynamic> res = json.decode(response.body);
+      ;
+      print(res);
+      if (response.statusCode == 200) {
+        res = json.decode(response.body);
+        print(res);
+      }
+      return;
+    } catch (error) {
+      print("Error in liking meme :  " + error.toString());
+      return;
+    }
+  }
+
+  Future<Null> unlikeMeme({String memeId, String token}) async {
+    print('Inside unLike meme');
+    try {
+      http.Response response =
+          await http.post('${uri}api/addons/unlike/${memeId}', headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      });
+      Map<String, dynamic> res = json.decode(response.body);
+      if (response.statusCode == 200) {
+        res = json.decode(response.body);
+        print(res);
+      }
+      return;
+    } catch (error) {
+      print("Error in liking meme :  " + error.toString());
+      return;
     }
   }
 }

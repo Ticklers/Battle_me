@@ -39,7 +39,7 @@ class BottomNavbar extends StatelessWidget {
                   case "1":
                     {
                       if (current_index != 1) {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           PageTransition(
                             child: BattleScreen(),
@@ -66,7 +66,7 @@ class BottomNavbar extends StatelessWidget {
                   case "3":
                     {
                       if (current_index != 3) {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           PageTransition(
                             child: TrendingScreen(),
@@ -81,7 +81,7 @@ class BottomNavbar extends StatelessWidget {
                   case "4":
                     {
                       if (current_index != 4) {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           PageTransition(
                             child: ProfileScreen(),
@@ -96,7 +96,7 @@ class BottomNavbar extends StatelessWidget {
                   default:
                     {
                       if (current_index != 0) {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           PageTransition(
                             child: HomeScreen(model),

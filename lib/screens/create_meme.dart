@@ -53,10 +53,11 @@ class _CreateMemeState extends State<CreateMeme> with WidgetsBindingObserver {
   }
 
   void _submitForm() {
-    if (!_formKey.currentState.validate()) {
-      return;
-    }
-    _formKey.currentState.save();
+    // if (!_formKey.currentState.validate()) {
+    //   return;
+    // }
+    // _formKey.currentState.save();
+    print('Submited');
   }
 
   @override
@@ -69,7 +70,7 @@ class _CreateMemeState extends State<CreateMeme> with WidgetsBindingObserver {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FlatButton(
-              onPressed: () => _submitForm(),
+              onPressed: () => widget.model.file != null ? _submitForm() : null,
               color: Theme.of(context).buttonColor,
               textColor: Theme.of(context).accentColor,
               shape: RoundedRectangleBorder(
@@ -85,41 +86,24 @@ class _CreateMemeState extends State<CreateMeme> with WidgetsBindingObserver {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Container(
-              // height: getDeviceHeight(context) * 0.4,
-              child: Row(
-                children: <Widget>[
-                  // Column(
-                  //   children: <Widget>[
-                  //     Row(
-                  //       children: <Widget>[
-                  //         SizedBox(
-                  //           width: 10,
-                  //         ),
-                  //         ClipRRect(
-                  //           borderRadius: BorderRadius.circular(50),
-                  //           child: FadeInImage.assetNetwork(
-                  //             height: getDeviceHeight(context) * 0.05,
-                  //             fadeInCurve: Curves.easeIn,
-                  //             placeholder: 'assets/avatar.png',
-                  //             image: ,
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
+            widget.model.file != null
+                ? Container(
+                    height: getDeviceHeight(context) * 0.1,
+                    color: Theme.of(context).cardColor.withOpacity(0.3),
+                    child: Row(
                       children: <Widget>[
-                        _buildMemeTextField(),
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              _buildMemeTextField(),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ),
+                  )
+                : Container(),
             SizedBox(height: getDeviceHeight(context) * 0.04),
             MediaScreen(widget.model),
           ],

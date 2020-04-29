@@ -20,16 +20,38 @@ class MemeCard extends StatefulWidget {
 class _MemeCardState extends State<MemeCard> {
   bool isLiked;
   String comment = null;
+  Meme meme;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
+    meme = widget.model.getFeedList[widget.index];
     isLiked = false;
+    checkLiked();
     super.initState();
+  }
+
+  bool checkLiked() {
+    // print('Check liked init');
+    if (meme.likes.length != 0) {
+      // print('Fired!!!!!!!!!!!!');
+      // print(meme.likes);
+      bool fetchLike = meme.likes.any((obj) {
+        if (obj['userId'] == widget.model.getAuthenticatedUser.userId) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      // print(fetchLike);
+      setState(() {
+        isLiked = fetchLike;
+      });
+    }
+    return isLiked;
   }
 
   @override
   Widget build(BuildContext context) {
-    Meme meme = widget.model.getFeedList[widget.index];
     MemeCard.viewportHeight = getViewportHeight(context);
     MemeCard.viewportWidth = getViewportWidth(context);
     return Card(
@@ -115,6 +137,7 @@ class _MemeCardState extends State<MemeCard> {
                   onPressed: () {
                     setState(() {
                       isLiked = !isLiked;
+                      setLike(isLiked);
                     });
                   },
                 ),
@@ -227,5 +250,27 @@ class _MemeCardState extends State<MemeCard> {
         ),
       ),
     );
+  }
+
+  void setLike(bool isLiked) {
+    if (isLiked) {
+      widget.model.likeMeme(
+          memeId: meme.memeId, token: widget.model.getAuthenticatedUser.token);
+
+      widget.model.meme_feed[widget.index].likes.add({
+        "userId": widget.model.getAuthenticatedUser.userId,
+      });
+    } else {
+      widget.model.unlikeMeme(
+          memeId: meme.memeId, token: widget.model.getAuthenticatedUser.token);
+      widget.model.meme_feed[widget.index].likes.any((obj) {
+        if (obj['userId'] == widget.model.getAuthenticatedUser.userId) {
+          widget.model.meme_feed[widget.index].likes.remove(obj);
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
   }
 }
