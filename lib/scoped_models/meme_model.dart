@@ -40,12 +40,15 @@ class MemeModel extends ConnectedModel {
         memeListData['memes'].forEach((dynamic memeData) {
           final Meme entry = Meme(
             memeId: memeData['_id'],
+            name: memeData['name'],
+            username: memeData['username'],
+            avatar: memeData['avatar'],
             caption: memeData['caption'],
             user: memeData['user'],
             date: memeData['date'],
             comments: memeData['comments'],
             likes: memeData['likes'],
-            // media: memeData['media'],
+            media: memeData['media'],
           );
           fetchedMemeList.add(entry);
         });
@@ -69,39 +72,12 @@ class MemeModel extends ConnectedModel {
   }
 
   Future<String> createMeme(
-      {String caption, String token, String userId, String mode}) async {
+      {Map<String, dynamic> formdata, String token}) async {
     isLoading = true;
     notifyListeners();
-    bool onProfile = false;
-    bool isBattle = false;
-    bool isRoast = false;
     print('Inside create meme : ' + isLoading.toString());
-    switch (mode) {
-      case "isBattle":
-        {
-          isBattle = true;
-        }
-        break;
-      case "isRoast":
-        {
-          isRoast = true;
-        }
-        break;
-      default:
-        {
-          onProfile = true;
-        }
-        break;
-    }
-    Map<String, dynamic> req = {
-      "isBattle": isBattle,
-      "isRoast": isRoast,
-      "onProfile": onProfile,
-      "caption": caption,
-      "user": userId,
-      "likes": [],
-      "comments": []
-    };
+    Map<String, dynamic> req = formdata;
+    // print(req);
     try {
       http.Response response = await http
           .post('${uri}api/memes/post', body: json.encode(req), headers: {
@@ -110,14 +86,15 @@ class MemeModel extends ConnectedModel {
       });
       Map<String, dynamic> res = json.decode(response.body);
       ;
+      // print(res);
       if (response.statusCode == 200) {
         res = json.decode(response.body);
-        print(res);
+        // print(res);
 
         isLoading = false;
         notifyListeners();
       }
-      print(res['_id']);
+      // print(res['_id']);
       return res['_id'];
     } catch (error) {
       print("Error in composing meme :  " + error.toString());
@@ -137,10 +114,10 @@ class MemeModel extends ConnectedModel {
       });
       Map<String, dynamic> res = json.decode(response.body);
       ;
-      print(res);
+      // print(res);
       if (response.statusCode == 200) {
         res = json.decode(response.body);
-        print(res);
+        // print(res);
       }
       return;
     } catch (error) {
@@ -160,7 +137,7 @@ class MemeModel extends ConnectedModel {
       Map<String, dynamic> res = json.decode(response.body);
       if (response.statusCode == 200) {
         res = json.decode(response.body);
-        print(res);
+        // print(res);
       }
       return;
     } catch (error) {

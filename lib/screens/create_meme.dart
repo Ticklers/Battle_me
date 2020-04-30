@@ -1,7 +1,10 @@
 import 'package:battle_me/helpers/dimensions.dart';
+import 'package:battle_me/models/user.dart';
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
+import 'package:battle_me/screens/home_screen.dart';
 import 'package:battle_me/widgets/utilities/media.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class CreateMeme extends StatefulWidget {
   final MainModel model;
@@ -11,8 +14,21 @@ class CreateMeme extends StatefulWidget {
 }
 
 class _CreateMemeState extends State<CreateMeme> with WidgetsBindingObserver {
-  final Map<String, dynamic> _formData = {
-    'caption': null,
+  // final Map<String, dynamic> _formData = {
+  //   'caption': null,
+  // };
+  User currentUser;
+  Map<String, dynamic> _formData = {
+    "isBattle": false,
+    "isRoast": false,
+    "onProfile": false,
+    "caption": null,
+    "user": null,
+    "name": null,
+    "username": null,
+    "avatar": null,
+    "likes": [],
+    "comments": []
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -43,70 +59,134 @@ class _CreateMemeState extends State<CreateMeme> with WidgetsBindingObserver {
           return null;
         },
         onChanged: (String value) {
-          _formData['meme'] = value;
+          _formData['caption'] = value;
         },
         onSaved: (String value) {
-          _formData['meme'] = value;
+          _formData['caption'] = value;
         },
       ),
     );
   }
 
-  void _submitForm() {
-    // if (!_formKey.currentState.validate()) {
-    //   return;
-    // }
-    // _formKey.currentState.save();
+  void _submitForm() async {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
+    _formData['onProfile'] = true;
+    _formData['user'] = currentUser.userId;
+    _formData['name'] = currentUser.name;
+    _formData['username'] = currentUser.username;
+    _formData['avatar'] = currentUser.avatar;
+    _formKey.currentState.save();
+    widget.model.createMeme(formdata: _formData, token: currentUser.token).then(
+      (String memeId) async {
+        if (memeId != null) {
+          // MediaScreen(widget.model).createState();
+          await widget.model
+              .imageUpload(memeId, widget.model.getImage(), 'meme');
+          widget.model.setImage(null);
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+              child: HomeScreen(widget.model),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 300),
+            ),
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Something went wrong!'),
+                content: Text('Please try again!'),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('OK'),
+                  )
+                ],
+              );
+            },
+          );
+        }
+      },
+    );
     print('Submited');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Create Meme'),
-        bottomOpacity: 0.4,
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
-              onPressed: () => widget.model.file != null ? _submitForm() : null,
-              color: Theme.of(context).buttonColor,
-              textColor: Theme.of(context).accentColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(10.0),
-                side: BorderSide(color: Colors.white24),
+    return WillPopScope(
+      onWillPop: () {
+        widget.model.file = null;
+        setState(() {
+          print('new state rendered');
+        });
+        return showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('Discard Changes ?'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () => Navigator.pop(context, false),
               ),
-              splashColor: Colors.lightGreen,
-              child: Text('Upload'),
-            ),
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.pop(context, true),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            widget.model.file != null
-                ? Container(
-                    height: getDeviceHeight(context) * 0.1,
-                    color: Theme.of(context).cardColor.withOpacity(0.3),
-                    child: Row(
-                      children: <Widget>[
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            children: <Widget>[
-                              _buildMemeTextField(),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
-            SizedBox(height: getDeviceHeight(context) * 0.04),
-            MediaScreen(widget.model),
+        );
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Create Meme'),
+          bottomOpacity: 0.4,
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+                onPressed: () =>
+                    widget.model.file != null ? _submitForm() : null,
+                color: Theme.of(context).buttonColor,
+                textColor: Theme.of(context).accentColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(10.0),
+                  side: BorderSide(color: Colors.white24),
+                ),
+                splashColor: Colors.lightGreen,
+                child: Text('Upload'),
+              ),
+            ),
           ],
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              widget.model.file != null
+                  ? Container(
+                      height: getDeviceHeight(context) * 0.1,
+                      color: Theme.of(context).cardColor.withOpacity(0.3),
+                      child: Row(
+                        children: <Widget>[
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: <Widget>[
+                                _buildMemeTextField(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(),
+              SizedBox(height: getDeviceHeight(context) * 0.04),
+              MediaScreen(widget.model),
+            ],
+          ),
         ),
       ),
     );
@@ -115,6 +195,7 @@ class _CreateMemeState extends State<CreateMeme> with WidgetsBindingObserver {
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    currentUser = widget.model.authenticatedUser;
     super.initState();
   }
 

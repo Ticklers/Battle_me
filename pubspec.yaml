@@ -31,6 +31,7 @@ dependencies:
   page_transition:
   flare_flutter:
   image_picker:
+  progressive_image:
 
 dev_dependencies:
   flutter_test:

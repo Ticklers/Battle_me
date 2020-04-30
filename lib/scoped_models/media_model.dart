@@ -23,6 +23,8 @@ class MediaModel extends ConnectedModel {
     isLoading = true;
     notifyListeners();
     print('Inside imageUpload : ');
+    print(memeId);
+    print(image.toString());
     // Find the mime type of the selected file by looking at the header bytes of the file
     final mimeTypeData =
         lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]).split('/');
@@ -30,10 +32,11 @@ class MediaModel extends ConnectedModel {
     var file = null;
     // Intilize the multipart request
     if (mode == 'meme') {
+      print('Inside meme mode:');
       imageUploadRequest = http.MultipartRequest(
           'PATCH', Uri.parse('${uri}api/memes/media/${memeId}'));
       // Attach the file in the request
-      file = await http.MultipartFile.fromPath('mediaLinks', image.path,
+      file = await http.MultipartFile.fromPath('media', image.path,
           contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
     } else {
       imageUploadRequest = http.MultipartRequest(
@@ -61,7 +64,7 @@ class MediaModel extends ConnectedModel {
       isLoading = false;
       notifyListeners();
     } catch (error) {
-      print('Error in uploading image: ' + error);
+      print('Error in uploading image: ' + error.toString());
       isLoading = false;
       notifyListeners();
       return null;

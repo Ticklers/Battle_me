@@ -9,9 +9,9 @@ class ConnectedModel extends Model {
   bool isLoading = false;
   File file = null;
   int bottom_navbar_index = 0;
-  List<Meme> popular_meme;
-  List<Meme> trending_meme;
-  List<Meme> meme_feed;
-  List<Meme> user_meme;
+  List<Meme> popular_meme = [];
+  List<Meme> trending_meme = [];
+  List<Meme> meme_feed = [];
+  List<Meme> user_meme = [];
   bool isUserAuthenticated = false;
 }

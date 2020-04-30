@@ -4,6 +4,7 @@ import 'package:battle_me/models/meme.dart';
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
 // import 'package:battle_me/models/meme.dart';
 import 'package:flutter/material.dart';
+import 'package:progressive_image/progressive_image.dart';
 
 class MemeCard extends StatefulWidget {
   final index;
@@ -77,7 +78,7 @@ class _MemeCardState extends State<MemeCard> {
                 ),
               ),
               title: Text(
-                'Rishabh Sharma',
+                meme.name,
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: getViewportHeight(context) * 0.021),
@@ -99,17 +100,29 @@ class _MemeCardState extends State<MemeCard> {
             Container(
               height: getDeviceWidth(context),
               width: getDeviceWidth(context),
-              child: Image.asset(
-                'assets/images/meme.png',
-                fit: BoxFit.fill,
+              child: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: ProgressiveImage.assetNetwork(
+                  placeholder: 'assets/images/meme.png', // gifs can be used
+                  thumbnail:
+                      widget.model.uri + widget.model.parseImage(meme.media),
+                  image: widget.model.uri + widget.model.parseImage(meme.media),
+                  height: getDeviceWidth(context),
+                  width: getDeviceWidth(context),
+                  fit: BoxFit.fill,
+                ),
               ),
+              // child: Image.asset(
+              //   meme.media != null ? meme.media : 'assets/images/meme.png',
+              //   fit: BoxFit.fill,
+              // ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, top: 15),
               child: Row(
                 children: <Widget>[
                   Text(
-                    'Rishabhltfb',
+                    meme.username,
                     style: TextStyle(
                         color: Theme.of(context).accentColor,
                         fontSize: getViewportHeight(context) * 0.021),
@@ -117,12 +130,15 @@ class _MemeCardState extends State<MemeCard> {
                   SizedBox(
                     width: getViewportWidth(context) * 0.04,
                   ),
-                  Text(
-                    meme.caption,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        color: Theme.of(context).accentColor,
-                        fontSize: getViewportHeight(context) * 0.021),
+                  Expanded(
+                    child: Text(
+                      meme.caption,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          color: Theme.of(context).accentColor,
+                          fontSize: getViewportHeight(context) * 0.021),
+                    ),
                   ),
                 ],
               ),
@@ -211,15 +227,7 @@ class _MemeCardState extends State<MemeCard> {
                               color: Theme.of(context).accentColor,
                               size: getViewportHeight(context) * 0.02,
                             ),
-                            onPressed: () {
-                              widget.model.createMeme(
-                                  caption: comment,
-                                  mode: 'onProfile',
-                                  token:
-                                      widget.model.getAuthenticatedUser.token,
-                                  userId:
-                                      widget.model.getAuthenticatedUser.userId);
-                            },
+                            onPressed: () {},
                           ),
                           labelText: 'Comment',
                           labelStyle: TextStyle(

@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:battle_me/screens/auth_screen.dart';
 import 'package:battle_me/screens/chatbox_screen.dart';
 import 'package:battle_me/widgets/utilities/bottom_navbar.dart';
 import 'package:battle_me/widgets/utilities/meme_card.dart';
-import 'package:flare_flutter/flare_actor.dart';
+// import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:page_transition/page_transition.dart';
@@ -22,33 +24,40 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _reloadHomeScreen();
+    // Future.delayed(Duration(milliseconds: 500), () async {
+    //   if (mounted &&
+    //       refreshIndicatorKey.currentState.mounted &&
+    //       refreshIndicatorKey != null) {
+    //     await refreshIndicatorKey.currentState.show();
+    //   }
+    // });
+  }
 
   Widget body() {
-    return widget.model.isLoading
-        ? Center(
-            child: Container(
-              height: 50,
-              width: 70,
-              child: FlareActor(
-                "assets/flare/Loader.flr",
-                animation: 'start',
-                fit: BoxFit.contain,
-                color: Colors.white,
-              ),
-            ),
-          )
-        : Stack(
-            children: <Widget>[
-              ListView.builder(
-                itemCount: widget.model.getFeedList.length,
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  return MemeCard(index, widget.model); // Add Card
-                },
-              )
-            ],
-          );
+    return Stack(
+      children: <Widget>[
+        RefreshIndicator(
+          backgroundColor: Colors.blue,
+          key: refreshIndicatorKey,
+          onRefresh: _reloadHomeScreen,
+          child: ListView.builder(
+            itemCount: widget.model.getFeedList.length,
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            physics: BouncingScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return MemeCard(index, widget.model); // Add Card
+            },
+          ),
+        )
+      ],
+    );
   }
 
   @override
@@ -60,10 +69,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           backgroundColor: Theme.of(context).primaryColor,
           // drawer: SideDrawer(),
           appBar: AppBar(
-            leading: Hero(
-              tag: "icon",
-              child: Container(
-                child: Image.asset('assets/images/icon.png'),
+            leading: GestureDetector(
+              onTap: () {
+                widget.model.logout();
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: AuthScreen(widget.model),
+                    type: PageTransitionType.fade,
+                    duration: Duration(milliseconds: 300),
+                  ),
+                );
+              },
+              child: Hero(
+                tag: "icon",
+                child: Container(
+                  child: Image.asset('assets/images/icon.png'),
+                ),
               ),
             ),
             title: Text('Home Screen'),
@@ -74,11 +96,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   color: Theme.of(context).accentColor,
                 ),
                 onPressed: () {
-                  widget.model.logout();
                   Navigator.push(
                     context,
                     PageTransition(
-                      child: AuthScreen(widget.model),
+                      child: ChatBoxScreen(),
                       type: PageTransitionType.fade,
                       duration: Duration(milliseconds: 300),
                     ),
@@ -97,5 +118,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         );
       },
     );
+  }
+
+  Future<Null> _reloadHomeScreen() async {
+    Completer<Null> completer = new Completer<Null>();
+    await widget.model.fetchMeme('feed');
+    Future.delayed(Duration(seconds: 2)).then((_) {
+      completer.complete();
+      setState(() {
+        print('Refresh Indicator works');
+      });
+    });
+    return completer.future;
   }
 }
