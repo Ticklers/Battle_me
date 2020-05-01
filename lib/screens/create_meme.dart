@@ -72,6 +72,19 @@ class _CreateMemeState extends State<CreateMeme> with WidgetsBindingObserver {
     if (!_formKey.currentState.validate()) {
       return;
     }
+    widget.model.isLoading
+        ? showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: Text(
+                'Uploading ...',
+              ),
+              content: CircularProgressIndicator(),
+              backgroundColor: Theme.of(context).accentColor,
+              titlePadding: EdgeInsets.all(15),
+            ),
+          )
+        : print('Uploaded');
     _formData['onProfile'] = true;
     _formData['user'] = currentUser.userId;
     _formData['name'] = currentUser.name;

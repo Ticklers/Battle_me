@@ -103,7 +103,8 @@ class _MemeCardState extends State<MemeCard> {
               child: Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: ProgressiveImage.assetNetwork(
-                  placeholder: 'assets/images/meme.png', // gifs can be used
+                  placeholder:
+                      'assets/images/placeholder_meme.jpg', // gifs can be used
                   thumbnail:
                       widget.model.uri + widget.model.parseImage(meme.media),
                   image: widget.model.uri + widget.model.parseImage(meme.media),
