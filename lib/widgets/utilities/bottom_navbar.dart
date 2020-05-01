@@ -2,10 +2,11 @@ import 'package:battle_me/helpers/dimensions.dart';
 import 'package:battle_me/helpers/my_flutter_app_icons.dart';
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
 import 'package:battle_me/screens/battle_screen.dart';
-import 'package:battle_me/screens/create_meme.dart';
+// import 'package:battle_me/screens/create_meme.dart';
 import 'package:battle_me/screens/home_screen.dart';
 import 'package:battle_me/screens/popular_meme.dart';
 import 'package:battle_me/screens/profile_screen.dart';
+import 'package:battle_me/widgets/utilities/media.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:page_transition/page_transition.dart';
@@ -55,7 +56,7 @@ class BottomNavbar extends StatelessWidget {
                       Navigator.push(
                         context,
                         PageTransition(
-                          child: CreateMeme(model),
+                          child: MediaScreen(model),
                           type: PageTransitionType.fade,
                           duration: Duration(milliseconds: 300),
                         ),

@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             leading: GestureDetector(
               onTap: () {
                 widget.model.logout();
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   PageTransition(
                     child: AuthScreen(widget.model),

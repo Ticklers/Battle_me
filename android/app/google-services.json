@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "522692699201",
+    "firebase_url": "https://cracknet-app.firebaseio.com",
+    "project_id": "cracknet-app",
+    "storage_bucket": "cracknet-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522692699201:android:245d92142fc7a3644a12c0",
+        "android_client_info": {
+          "package_name": "com.example.battle_me"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522692699201-jhvifp75b0dviucr145l22hrppbup3ku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwmxIPTBGZQOu-znJXdhS8VeNL7-XNuDc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522692699201-jhvifp75b0dviucr145l22hrppbup3ku.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

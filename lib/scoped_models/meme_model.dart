@@ -114,7 +114,7 @@ class MemeModel extends ConnectedModel {
       });
       Map<String, dynamic> res = json.decode(response.body);
       ;
-      // print(res);
+      print(res);
       if (response.statusCode == 200) {
         res = json.decode(response.body);
         // print(res);
@@ -137,7 +137,7 @@ class MemeModel extends ConnectedModel {
       Map<String, dynamic> res = json.decode(response.body);
       if (response.statusCode == 200) {
         res = json.decode(response.body);
-        // print(res);
+        print(res);
       }
       return;
     } catch (error) {

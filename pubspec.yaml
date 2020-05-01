@@ -32,6 +32,9 @@ dependencies:
   flare_flutter:
   image_picker:
   progressive_image:
+  firebase_core:
+  firebase_storage:
+  image_cropper:
 
 dev_dependencies:
   flutter_test:
