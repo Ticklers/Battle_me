@@ -6,8 +6,9 @@ class User {
   final String userId;
   final String email;
   final String avatar;
-  // final int age;
-  // final List<dynamic> memes_record;
+  final List<dynamic> memes;
+  final List<dynamic> followers;
+  final List<dynamic> followings;
   final String token;
   final String dateOfJoining;
   User({
@@ -16,9 +17,10 @@ class User {
     @required this.userId,
     @required this.email,
     @required this.avatar,
-    // @required this.memes_record,
-    // @required this.age,
-    this.dateOfJoining,
+    @required this.memes,
+    @required this.followers,
+    @required this.followings,
+    @required this.dateOfJoining,
     this.token,
   });
 }

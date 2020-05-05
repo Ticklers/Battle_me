@@ -48,7 +48,7 @@ class MemeModel extends ConnectedModel {
             date: memeData['date'],
             comments: memeData['comments'],
             likes: memeData['likes'],
-            media: memeData['media'],
+            mediaLink: memeData['mediaLink'],
           );
           fetchedMemeList.add(entry);
         });
@@ -101,6 +101,41 @@ class MemeModel extends ConnectedModel {
       isLoading = false;
       notifyListeners();
       return null;
+    }
+  }
+
+  Future<Null> commentMeme(
+      {String comment, String memeId, String token}) async {
+    isLoading = true;
+    notifyListeners();
+    print('Inside comment meme : ' + isLoading.toString());
+    Map<String, dynamic> req = {'comment': comment};
+    // print(req);
+    try {
+      http.Response response = await http.post(
+          '${uri}api/addons/comment/${memeId}',
+          body: json.encode(req),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+          });
+      Map<String, dynamic> res = json.decode(response.body);
+      ;
+      print(res);
+      if (response.statusCode == 200) {
+        res = json.decode(response.body);
+        print(res);
+
+        isLoading = false;
+        notifyListeners();
+      }
+      // print(res['_id']);
+      return;
+    } catch (error) {
+      print("Error in composing meme :  " + error.toString());
+      isLoading = false;
+      notifyListeners();
+      return;
     }
   }
 

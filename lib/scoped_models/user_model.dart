@@ -63,7 +63,9 @@ class UserModel extends ConnectedModel {
           dateOfJoining: responseData['dateOfJoining'],
           email: responseData['email'],
           username: responseData['username'],
-          // memes_record: responseData['memes_record'],
+          memes: responseData['memes'],
+          followers: responseData['followers'],
+          followings: responseData['followings'],
           name: responseData['name'],
           userId: responseData['_id'],
           token: token,
@@ -132,5 +134,68 @@ class UserModel extends ConnectedModel {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
     await prefs.remove('userId');
+  }
+
+  Future<User> findUser(String userId) async {
+    isLoading = true;
+    notifyListeners();
+    print('Inside FindUser : ');
+    return await http
+        .get(
+      '${uri}api/users/$userId',
+    )
+        .then<User>((http.Response response) {
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body)['user'];
+        User user = new User(
+          avatar: responseData['avatar'],
+          dateOfJoining: responseData['dateOfJoining'],
+          email: responseData['email'],
+          username: responseData['username'],
+          memes: responseData['memes'],
+          followers: responseData['followers'],
+          followings: responseData['followings'],
+          name: responseData['name'],
+          userId: responseData['_id'],
+        );
+        print(user);
+        print(user.name);
+        isLoading = false;
+        notifyListeners();
+        return user;
+      }
+      return null;
+    }).catchError((error) {
+      isLoading = false;
+      notifyListeners();
+      print("Fetch other User Error: ${error.toString()}");
+      return null;
+    });
+  }
+
+  Future<bool> toggleFollow(String userId, String token) async {
+    isLoading = true;
+    notifyListeners();
+    print('Inside toggle follow : ');
+    try {
+      http.Response response =
+          await http.post('${uri}api/userupdate/follow/${userId}', headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      });
+      if (response.statusCode == 200) {
+        print('Inside toggle follow success');
+        final Map<String, dynamic> res = json.decode(response.body);
+        print(res);
+      }
+      isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (error) {
+      print("Error in toggle follow:  " + error.toString());
+      isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 }

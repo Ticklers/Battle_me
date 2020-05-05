@@ -2,11 +2,12 @@ import 'package:battle_me/helpers/dimensions.dart';
 import 'package:battle_me/helpers/my_flutter_app_icons.dart';
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
 import 'package:battle_me/screens/battle_screen.dart';
+import 'package:battle_me/screens/create_meme.dart';
 // import 'package:battle_me/screens/create_meme.dart';
 import 'package:battle_me/screens/home_screen.dart';
 import 'package:battle_me/screens/popular_meme.dart';
 import 'package:battle_me/screens/profile_screen.dart';
-import 'package:battle_me/widgets/utilities/media.dart';
+// import 'package:battle_me/widgets/utilities/media.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:page_transition/page_transition.dart';
@@ -26,12 +27,12 @@ class BottomNavbar extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white24,
+                  color: Colors.white,
                   blurRadius: 5.0,
                 )
               ],
             ),
-            height: getDeviceHeight(context) * 0.09,
+            height: getDeviceHeight(context) * 0.075,
             width: MediaQuery.of(context).size.width,
             child: BottomNavigationBar(
               onTap: (index) {
@@ -56,7 +57,7 @@ class BottomNavbar extends StatelessWidget {
                       Navigator.push(
                         context,
                         PageTransition(
-                          child: MediaScreen(model),
+                          child: CreateMeme(model),
                           type: PageTransitionType.fade,
                           duration: Duration(milliseconds: 300),
                         ),
@@ -70,7 +71,7 @@ class BottomNavbar extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           PageTransition(
-                            child: TrendingScreen(),
+                            child: TrendingScreen(model),
                             type: PageTransitionType.fade,
                             duration: Duration(milliseconds: 300),
                           ),
@@ -85,7 +86,7 @@ class BottomNavbar extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           PageTransition(
-                            child: ProfileScreen(),
+                            child: ProfileScreen(model),
                             type: PageTransitionType.fade,
                             duration: Duration(milliseconds: 300),
                           ),

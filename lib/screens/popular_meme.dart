@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class TrendingScreen extends StatefulWidget {
+  final MainModel model;
+  TrendingScreen(this.model);
   @override
   _TrendingScreenState createState() => _TrendingScreenState();
 }
@@ -17,11 +19,11 @@ class _TrendingScreenState extends State<TrendingScreen>
         return Stack(
           children: <Widget>[
             ListView.builder(
-              itemCount: 5,
+              itemCount: widget.model.getFeedList.length,
               padding: EdgeInsets.symmetric(horizontal: 5),
               physics: BouncingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
-                return MemeCard(index, model); // Add Card
+                return MemeCard(index: index, model: model); // Add Card
               },
             )
           ],
@@ -33,7 +35,6 @@ class _TrendingScreenState extends State<TrendingScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
       bottomNavigationBar: BottomNavbar(3),
       appBar: AppBar(
         title: Text('Popular'),
