@@ -123,11 +123,12 @@ class _MemeCardState extends State<MemeCard> {
                   fontSize: getViewportHeight(context) * 0.018),
             ),
             trailing: IconButton(
+                splashColor: Theme.of(context).accentColor,
                 icon: Icon(
                   Icons.more_vert,
                   color: Theme.of(context).accentColor,
                 ),
-                onPressed: null),
+                onPressed: () => print('Open meme dialog')),
           ),
           Container(
             height: getDeviceWidth(context),
@@ -190,6 +191,7 @@ class _MemeCardState extends State<MemeCard> {
                 },
               ),
               IconButton(
+                splashColor: Theme.of(context).accentColor,
                 icon: Icon(
                   MyFlutterApp.commenting_o,
                   color: Theme.of(context).accentColor,
@@ -199,6 +201,7 @@ class _MemeCardState extends State<MemeCard> {
                 },
               ),
               IconButton(
+                splashColor: Theme.of(context).accentColor,
                 icon: Icon(
                   Icons.share,
                   color: Theme.of(context).accentColor,
@@ -266,8 +269,14 @@ class _MemeCardState extends State<MemeCard> {
                             meme.comments.insert(0, {
                               "userId":
                                   widget.model.getAuthenticatedUser.userId,
+                              "avatar":
+                                  widget.model.getAuthenticatedUser.avatar,
+                              "username":
+                                  widget.model.getAuthenticatedUser.username,
                               "comment": comment,
                             });
+
+                            widget.onMemeIndexSelect(widget.index);
                             widget.model.commentMeme(
                                 comment: comment,
                                 memeId: meme.memeId,

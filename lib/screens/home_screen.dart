@@ -40,21 +40,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   showBottomSheet(context, index) {
     List comments = widget.model.getFeedList[index].comments;
-    // List comments = [
-    //   {"comment": "heheheheh"},
-    //   {"comment": "heheheheh"},
-    //   {"comment": "heheheheh"},
-    //   {"comment": "heheheheh"},
-    //   {"comment": "heheheheh"},
-    //   {"comment": "heheheheh"},
-    //   {"comment": "heheheheh"},
-    //   {"comment": "heheheheh"},
-    //   {"comment": "heheheheh"},
-    //   {"comment": "heheheheh"},
-    //   {"comment": "heheheheh"},
-    // ];
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      elevation: 5,
       builder: (BuildContext context) {
         return Container(
           height: getDeviceHeight(context) * 0.7,
@@ -62,10 +51,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             color: Theme.of(context).cardColor,
             boxShadow: [
               BoxShadow(
-                  color: Colors.white,
-                  spreadRadius: 1,
-                  blurRadius: 2,
-                  offset: Offset.fromDirection(0.7))
+                color: Colors.white,
+                spreadRadius: 1,
+                blurRadius: 2,
+                offset: Offset.fromDirection(0.7),
+              ),
             ],
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
@@ -118,6 +108,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     .insert(0, {
                                   "userId":
                                       widget.model.getAuthenticatedUser.userId,
+                                  "avatar":
+                                      widget.model.getAuthenticatedUser.avatar,
+                                  "username": widget
+                                      .model.getAuthenticatedUser.username,
                                   "comment": newcomment,
                                 });
                                 widget.model.commentMeme(
@@ -237,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            title: Text('Home Screen'),
+            title: Text('Tickle'),
             actions: <Widget>[
               IconButton(
                 icon: Icon(

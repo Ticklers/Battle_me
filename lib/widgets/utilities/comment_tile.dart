@@ -4,6 +4,7 @@ import 'package:battle_me/screens/other_profile_screen.dart';
 import 'package:battle_me/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:progressive_image/progressive_image.dart';
 // import 'package:progressive_image/progressive_image.dart';
 
 class CommentTile extends StatefulWidget {
@@ -24,8 +25,8 @@ class _CommentTileState extends State<CommentTile> {
       child: ListTile(
         leading: GestureDetector(
           onTap: () async {
-            print(comment["userId"]);
-            print(comment["userId"]);
+            // print(comment["userId"]);
+            // print(comment["userId"]);
             if (comment["userId"] != widget.model.getAuthenticatedUser.userId) {
               CircularProgressIndicator();
               await widget.model.findUser(comment["userId"]).then(
@@ -55,15 +56,17 @@ class _CommentTileState extends State<CommentTile> {
             padding: const EdgeInsets.all(8.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
-              child: Image.asset(
-                'assets/images/wallpaper.jpg', // gifs can be used
+              child: ProgressiveImage.assetNetwork(
+                placeholder: 'assets/images/wallpaper.jpg', // gifs can be used
+                thumbnail: comment['avatar'],
+                image: comment['avatar'],
                 height: getViewportHeight(context) * 0.05,
                 width: getViewportHeight(context) * 0.05,
               ),
             ),
           ),
         ),
-        title: Text(widget.comment["userId"]),
+        title: Text(widget.comment["username"]),
         subtitle: Text(widget.comment["comment"]),
       ),
     );

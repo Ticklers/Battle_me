@@ -79,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   children: <Widget>[
                     Text(
-                      'Meme Battle',
+                      'Tickle',
                       style: TextStyle(
                           color: Colors.white,
                           fontFamily: "Manrope",
@@ -89,7 +89,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                     SizedBox(height: getDeviceHeight(context) * 0.05),
                     Text(
-                      '"Why so serious ?"',
+                      "Have Fun ! \n Why so serious ?",
                       style: TextStyle(
                           fontFamily: "Ubuntu",
                           color: Colors.white,
