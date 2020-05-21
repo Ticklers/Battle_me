@@ -1,0 +1,1 @@
+enum MessageSenderEnum { USER, FRIEND }

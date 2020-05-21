@@ -20,7 +20,7 @@ void main() {
     'autoConnect': true,
     'query': {"username": "Rishabh"}, // optional
   });
-  socket.connect();
+  // socket.connect();
   // SocketModel socketModel = SocketModel();
   // socketModel.socketClient(socket);
 

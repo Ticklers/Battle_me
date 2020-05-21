@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   List<Meme> feedList;
   @override
   void initState() {
+    // widget.model.disconectNamespace();
     super.initState();
     // _reloadHomeScreen();
   }
@@ -264,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     Navigator.push(
                       context,
                       PageTransition(
-                        child: ChatBoxScreen(),
+                        child: ChatsPage(),
                         type: PageTransitionType.fade,
                         duration: Duration(milliseconds: 300),
                       ),

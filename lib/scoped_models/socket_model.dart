@@ -104,7 +104,11 @@ class SocketModel extends ConnectedModel {
 
   Future<Null> joinNs(String endpoint) async {
     if (mainNsSocket != null) {
+      print(mainNsSocket);
       mainNsSocket.close();
+      mainNsSocket = null;
+      print('closing namespace!');
+      print(mainNsSocket);
     }
     print('Inside joinNs : ${endpoint}');
     IO.Socket nsSocket =
@@ -112,11 +116,11 @@ class SocketModel extends ConnectedModel {
       'transports': ['websocket'],
       'autoConnect': true,
     });
-    nsSocket.connect();
+    // nsSocket.connect();
     mainNsSocket = nsSocket;
     await nsSocket.on('chatRoomsList', (chats) {
       // print('chatRoomList Data length:  ${chats.length}');
-      // print(chats);
+      print(chats);
       List chatList = [];
       chats.forEach((chat) {
         chatList.add(chat);
@@ -125,7 +129,7 @@ class SocketModel extends ConnectedModel {
     });
   }
 
-  joinChatRoom(String roomToJoin) {
+  void joinChatRoom(String roomToJoin) {
     // if (mainNsSocket != null) {
     //   mainNsSocket.close();
     // }
@@ -143,5 +147,11 @@ class SocketModel extends ConnectedModel {
       // chatHistory = data;
       setChatHistory(data['chatHistory']);
     });
+    // return chatlist;
   }
+
+  // void disconectNamespace() {
+  //   mainNsSocket.emit('disconnect');
+  //   mainNsSocket = null;
+  // }
 }
