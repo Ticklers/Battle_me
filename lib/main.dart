@@ -1,3 +1,4 @@
+// import 'package:battle_me/helpers/system_chrome_settings.dart';
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
 import 'package:battle_me/screens/battle_screen.dart';
 import 'package:battle_me/screens/home_screen.dart';
@@ -7,13 +8,28 @@ import 'package:battle_me/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+// import 'package:battle_me/scoped_models/socket_model.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
-  runApp(MyApp());
+  // Dart client
+  print('Inside socketConnect');
+  IO.Socket socket = IO.io('http://192.168.43.197:5000', <String, dynamic>{
+    'transports': ['websocket'],
+    'autoConnect': true,
+    'query': {"username": "Rishabh"}, // optional
+  });
+  socket.connect();
+  // SocketModel socketModel = SocketModel();
+  // socketModel.socketClient(socket);
+
+  runApp(MyApp(socket));
 }
 
 class MyApp extends StatefulWidget {
+  final IO.Socket socket;
+  MyApp(this.socket);
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -23,6 +39,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    _model.setSocket(widget.socket);
+    _model.socketClient(widget.socket);
     _model.autoAuthenticate();
     _model.fetchMeme('feed');
     super.initState();
@@ -52,17 +70,24 @@ class _MyAppState extends State<MyApp> {
           // scaffoldBackgroundColor: Color(0xff2b2d5d),
           dividerColor: Colors.white,
           textTheme: TextTheme(
-            subhead: TextStyle(color: Colors.white),
-            body1: TextStyle(color: Colors.white),
-            headline: TextStyle(color: Colors.white),
+            // subhead: TextStyle(color: Colors.white),
+            subtitle1: TextStyle(color: Colors.white),
+            // body1: TextStyle(color: Colors.white),
+            bodyText2: TextStyle(color: Colors.white),
+            // headline: TextStyle(color: Colors.white),
+            headline5: TextStyle(color: Colors.white),
             caption: TextStyle(color: Colors.white70),
-            title: TextStyle(color: Colors.white),
-            subtitle: TextStyle(color: Colors.white),
+            // title: TextStyle(color: Colors.white),
+            headline6: TextStyle(color: Colors.white),
+            // subtitle: TextStyle(color: Colors.white),
+            subtitle2: TextStyle(color: Colors.white),
           ),
           primaryTextTheme: TextTheme(
             button: TextStyle(color: Colors.white),
-            title: TextStyle(color: Colors.white),
-            subtitle: TextStyle(color: Colors.white),
+            // title: TextStyle(color: Colors.white),
+            headline6: TextStyle(color: Colors.white),
+            // subtitle: TextStyle(color: Colors.white),
+            subtitle2: TextStyle(color: Colors.white),
           ),
           textSelectionColor: Colors.white,
         ),

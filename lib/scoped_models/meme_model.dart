@@ -38,6 +38,7 @@ class MemeModel extends ConnectedModel {
           return;
         }
         memeListData['memes'].forEach((dynamic memeData) {
+          print(memeData['mediaHash']);
           final Meme entry = Meme(
             memeId: memeData['_id'],
             name: memeData['name'],
@@ -49,11 +50,13 @@ class MemeModel extends ConnectedModel {
             comments: memeData['comments'],
             likes: memeData['likes'],
             mediaLink: memeData['mediaLink'],
+            mediaHash: memeData['mediaHash'],
           );
           fetchedMemeList.add(entry);
         });
         meme_feed = fetchedMemeList;
         print(meme_feed.length);
+        print(meme_feed[0].mediaHash);
         print('fetch meme ends');
         isLoading = false;
         notifyListeners();

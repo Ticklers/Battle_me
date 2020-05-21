@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:battle_me/helpers/dimensions.dart';
+import 'package:battle_me/models/meme.dart';
 import 'package:battle_me/screens/auth_screen.dart';
 import 'package:battle_me/screens/chatbox_screen.dart';
 import 'package:battle_me/widgets/utilities/bottom_navbar.dart';
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   String newcomment = null;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int commentIndex;
-
+  List<Meme> feedList;
   @override
   void initState() {
     super.initState();
@@ -179,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget body() {
+  Widget body(MainModel model) {
     return Stack(
       children: <Widget>[
         RefreshIndicator(
@@ -187,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           key: refreshIndicatorKey,
           onRefresh: _reloadHomeScreen,
           child: ListView.builder(
-            itemCount: widget.model.getFeedList.length,
+            itemCount: feedList.length,
             padding: EdgeInsets.symmetric(horizontal: 5),
             physics: BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
@@ -200,12 +201,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             },
           ),
         ),
+        model.newFeed
+            ? Positioned(
+                left: getDeviceWidth(context) / 2 - 50,
+                child: FlatButton(
+                  color: Colors.blue,
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(30.0)),
+                  textColor: Colors.white,
+                  child: Text('New Posts'),
+                  onPressed: () {
+                    setState(() {
+                      makeChange(model);
+                      widget.model.newFeed = false;
+                    });
+                  },
+                ),
+              )
+            : Container(),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    feedList = widget.model.getFeedList;
     return ScopedModelDescendant(
       builder: (BuildContext context, Widget child, MainModel model) {
         return Scaffold(
@@ -239,65 +259,49 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   color: Theme.of(context).accentColor,
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                      child: ChatBoxScreen(),
-                      type: PageTransitionType.fade,
-                      duration: Duration(milliseconds: 300),
-                    ),
-                  );
+                  model.joinNs('/chat');
+                  Timer(Duration(milliseconds: 200), () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        child: ChatBoxScreen(),
+                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 300),
+                      ),
+                    );
+                  });
                 },
               ),
             ],
             backgroundColor: Theme.of(context).appBarTheme.color,
           ),
-          // bottomSheet: DraggableScrollableSheet(
-          //   // expand: true,
-          //   initialChildSize: 0.8,
-          //   maxChildSize: 0.8,
-          //   minChildSize: 0.2,
-          //   builder: (context, scrollController) {
-          //     return SingleChildScrollView(
-          //       controller: scrollController,
-          //       child: Container(
-          //         color: Colors.yellow,
-          //         height: getViewportHeight(context),
-          //         child: ListView.builder(
-          //           itemCount: widget.model.getFeedList.length,
-          //           padding: EdgeInsets.symmetric(horizontal: 5),
-          //           physics: BouncingScrollPhysics(),
-          //           itemBuilder: (BuildContext context, int index) {
-          //             return MemeCard(index, widget.model); // Add Card
-          //           },
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // ),
           bottomNavigationBar: BottomNavbar(0),
           body: GestureDetector(
-              onTap: () {
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
-              child: body()),
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: body(model),
+          ),
         );
       },
     );
   }
 
   Future<Null> _reloadHomeScreen() async {
-    // Completer<Null> completer = new Completer<Null>();
-    await widget.model.fetchMeme('feed').then((_) {
-      setState(() {});
-      print('Meme fetched successfully!!!!!!!');
-    });
-    // Future.delayed(Duration(seconds: 2)).then((_) {
-    //   completer.complete();
-    //   setState(() {
-    //     print('Refresh Indicator works');
-    //   });
+    widget.model.liveFeedFetch(widget.model.mainSocket);
+    print(widget.model.getFeedList.length);
+    // print(widget.model.mainSocket.id);
+    // await widget.model.fetchMeme('feed').then((_) {
+    //   setState(() {});
+    //   print('Meme fetched successfully!!!!!!!');
     // });
-    // return completer.future;
+  }
+
+  makeChange(MainModel model) {
+    setState(() {
+      feedList = model.getFeedList;
+    });
+    // Timer(Duration(seconds: 1), () {
+    // });
   }
 }

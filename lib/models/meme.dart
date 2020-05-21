@@ -9,6 +9,7 @@ class Meme {
   final String avatar;
   String caption = "";
   final String mediaLink;
+  String mediaHash;
   final List<dynamic> likes;
   final List<dynamic> comments;
   Meme({
@@ -20,6 +21,7 @@ class Meme {
     @required this.date,
     this.caption,
     @required this.mediaLink,
+    this.mediaHash,
     @required this.likes,
     @required this.comments,
   });

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 import './connected_scoped_model.dart';
+// import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class UserModel extends ConnectedModel {
   User authenticatedUser = null;
@@ -198,4 +199,17 @@ class UserModel extends ConnectedModel {
       return false;
     }
   }
+
+  // Future<Null> socketConnect() async {
+  //   // Dart client
+  //   print('Inside socketConnect');
+  //   IO.Socket socket = await IO.io('http://192.168.43.197:5000');
+  //   socket.on('connect', (_) {
+  //     print('connect!!!!!!!!!!!!!!!');
+  //     //  socket.emit('msg', 'test');
+  //   });
+  //   // socket.on('event', (data) => print(data));
+  //   // socket.on('disconnect', (_) => print('disconnect'));
+  //   // socket.on('fromServer', (_) => print(_))
+  // }
 }

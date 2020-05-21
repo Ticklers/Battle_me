@@ -2,6 +2,7 @@ import 'package:battle_me/models/meme.dart';
 
 import '../api/keys.dart';
 import 'dart:io';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:scoped_model/scoped_model.dart';
 
 class ConnectedModel extends Model {
@@ -14,4 +15,9 @@ class ConnectedModel extends Model {
   List<Meme> meme_feed = [];
   List<Meme> user_meme = [];
   bool isUserAuthenticated = false;
+  IO.Socket mainSocket;
+  IO.Socket mainNsSocket;
+  bool newFeed = false;
+  List chats = null;
+  List chatHistory = null;
 }

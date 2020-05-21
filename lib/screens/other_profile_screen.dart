@@ -259,7 +259,9 @@ class _OtherProfileScreenState extends State<OtherProfileScreen>
                       ),
                     ),
                     widget.model.isLoading
-                        ? CircularProgressIndicator()
+                        ? Container(
+                            height: getViewportHeight(context) * 0.42,
+                            child: Center(child: CircularProgressIndicator()))
                         : (widget.model.getAuthenticatedUser.followings.any(
                                 (obj) => obj["following"] == currentUser.userId)
                             ? Container(
@@ -303,7 +305,7 @@ class _OtherProfileScreenState extends State<OtherProfileScreen>
                                 ),
                               )
                             : Container(
-                                height: getViewportHeight(context) * 0.39,
+                                height: getViewportHeight(context) * 0.42,
                                 child: Center(
                                   child: Text('Not Following'),
                                 ),

@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:battle_me/helpers/dimensions.dart';
 import 'package:battle_me/helpers/my_flutter_app_icons.dart';
 import 'package:battle_me/models/user.dart';
@@ -8,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:blurhash_dart/blurhash_dart.dart';
+import 'package:image/image.dart' as img;
 
 class CreateMeme extends StatefulWidget {
   final MainModel model;
@@ -25,6 +29,7 @@ class _CreateMemeState extends State<CreateMeme> with WidgetsBindingObserver {
     "caption": null,
     "user": null,
     "mediaLink": null,
+    "mediaHash": null,
     "name": null,
     "username": null,
     "avatar": null,
@@ -99,22 +104,40 @@ class _CreateMemeState extends State<CreateMeme> with WidgetsBindingObserver {
     if (!_formKey.currentState.validate()) {
       return;
     }
+    Uint8List fileData = File(_imageFile.path).readAsBytesSync();
+    img.Image image = img.decodeImage(fileData.toList());
+    final blurHash = encodeBlurHash(
+      image.getBytes(),
+      image.width,
+      image.height,
+    );
+
     _formData['mediaLink'] = await widget.model.startUpload(_imageFile);
     _formData['onProfile'] = true;
+    _formData['mediaHash'] = blurHash;
     _formData['user'] = currentUser.userId;
     _formData['name'] = currentUser.name;
     _formData['username'] = currentUser.username;
     _formData['avatar'] = currentUser.avatar;
     _formKey.currentState.save();
-    widget.model.createMeme(formdata: _formData, token: currentUser.token);
-    Navigator.pushReplacement(
-      context,
-      PageTransition(
-        child: HomeScreen(widget.model),
-        type: PageTransitionType.fade,
-        duration: Duration(milliseconds: 300),
-      ),
-    );
+
+    // print("Here is hash: $blurHash");
+    widget.model.newPostAdd(widget.model.mainSocket, _formData);
+    widget.model
+        .createMeme(formdata: _formData, token: currentUser.token)
+        .then((_) {
+      widget.model.liveFeedFetch(widget.model.mainSocket);
+      Timer(Duration(milliseconds: 1000), () {
+        Navigator.pushReplacement(
+          context,
+          PageTransition(
+            child: HomeScreen(widget.model),
+            type: PageTransitionType.fade,
+            duration: Duration(milliseconds: 300),
+          ),
+        );
+      });
+    });
     print('Submited');
   }
 
@@ -168,46 +191,48 @@ class _CreateMemeState extends State<CreateMeme> with WidgetsBindingObserver {
               height: getViewportHeight(context) * 0.7,
               child: ListView(
                 children: <Widget>[
-                  if (_imageFile != null) ...[
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Container(
-                        height: getDeviceWidth(context),
-                        width: getDeviceWidth(context),
-                        child: Image.file(_imageFile),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        FlatButton(
-                          child: Icon(
-                            Icons.crop,
-                            color: Theme.of(context).accentColor,
+                  _imageFile != null
+                      ? Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Container(
+                            height: getDeviceWidth(context),
+                            width: getDeviceWidth(context),
+                            child: Image.file(_imageFile),
                           ),
-                          onPressed: _cropImage,
-                        ),
-                        FlatButton(
-                          child: Icon(
-                            Icons.refresh,
-                            color: Theme.of(context).accentColor,
+                        )
+                      : Container(),
+                  _imageFile != null
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            FlatButton(
+                              child: Icon(
+                                Icons.crop,
+                                color: Theme.of(context).accentColor,
+                              ),
+                              onPressed: _cropImage,
+                            ),
+                            FlatButton(
+                              child: Icon(
+                                Icons.refresh,
+                                color: Theme.of(context).accentColor,
+                              ),
+                              onPressed: _clear,
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  _imageFile == null
+                      ? Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Container(
+                            height: getViewportHeight(context) * 0.4,
+                            width: getViewportWidth(context),
+                            child: Image.asset(
+                                'assets/images/placeholder_meme.jpg'),
                           ),
-                          onPressed: _clear,
-                        ),
-                      ],
-                    ),
-                  ],
-                  if (_imageFile == null) ...[
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Container(
-                        height: getViewportHeight(context) * 0.4,
-                        width: getViewportWidth(context),
-                        child:
-                            Image.asset('assets/images/placeholder_meme.jpg'),
-                      ),
-                    )
-                  ],
+                        )
+                      : Container(),
                   Container(
                     // height: getViewportHeight(context) * 0.7,
                     // alignment: Alignment.,

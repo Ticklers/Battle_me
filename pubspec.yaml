@@ -35,6 +35,11 @@ dependencies:
   firebase_core:
   firebase_storage:
   image_cropper:
+  snappable:
+  socket_io_client:
+  intl:
+  flutter_blurhash:
+  blurhash_dart:
 
 dev_dependencies:
   flutter_test:
