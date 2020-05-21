@@ -1,3 +1,4 @@
+import 'package:battle_me/scoped_models/main_scoped_model.dart';
 import 'package:flutter/material.dart';
 import 'package:battle_me/enums/MessageSenderEnum.dart';
 import 'package:battle_me/models/chats.dart';
@@ -9,8 +10,9 @@ import 'package:battle_me/widgets/chat/top_appbar_chat.dart';
 
 class ChatPage extends StatefulWidget {
   final Chats chats;
+  final MainModel model;
 
-  const ChatPage({Key key, this.chats}) : super(key: key);
+  const ChatPage({Key key, this.chats, this.model}) : super(key: key);
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -68,7 +70,9 @@ class _ChatPageState extends State<ChatPage> {
         padding: const EdgeInsets.only(bottom: 30, top: 10),
         child: Center(
           child: Text(
-            "Last messages",
+            widget.chats.messages.length > 0
+                ? "Last messages"
+                : "No message yet",
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,
@@ -81,7 +85,7 @@ class _ChatPageState extends State<ChatPage> {
     if (widget.chats.messages.isNotEmpty) {
       int index = 0;
       widget.chats.messages.forEach((message) {
-        if (message.messageSenderEnum == MessageSenderEnum.FRIEND) {
+        if (message.userId != 'rishabh') {
           listWidgets.add(MessageReceivedChat(
             urlPhoto: widget.chats.urlPhotoUser,
             message: message,
@@ -109,9 +113,13 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       _columnMessages.add(MessageSentChat(
         message: Message(
-            message: message,
-            messageSenderEnum: MessageSenderEnum.USER,
-            time: "00:11"),
+          message: message,
+          // messageSenderEnum: MessageSenderEnum.USER,
+          time: "00:11",
+          mediaLink: "mediaLink",
+          userId: "rishabhuserid",
+          username: "Rishabh",
+        ),
         firstMessage: false,
         lastMessage: false,
       ));

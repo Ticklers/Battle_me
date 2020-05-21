@@ -1,3 +1,4 @@
+import 'package:battle_me/models/chats.dart';
 import 'package:battle_me/models/meme.dart';
 
 import '../api/keys.dart';
@@ -18,6 +19,6 @@ class ConnectedModel extends Model {
   IO.Socket mainSocket;
   IO.Socket mainNsSocket;
   bool newFeed = false;
-  List chats = null;
-  List chatHistory = null;
+  List<Chats> chats = null;
+  // List chatHistory = null;
 }

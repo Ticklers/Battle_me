@@ -2,6 +2,8 @@
 import 'dart:async';
 // import 'package:intl/intl.dart';
 
+import 'package:battle_me/enums/MessageSeenEnum.dart';
+import 'package:battle_me/models/chats.dart';
 import 'package:battle_me/models/meme.dart';
 
 import './connected_scoped_model.dart';
@@ -16,13 +18,13 @@ class SocketModel extends ConnectedModel {
     meme_feed = data;
   }
 
-  void setChats(List chatList) {
+  void setChats(List<Chats> chatList) {
     chats = chatList;
   }
 
   void setChatHistory(List data) {
     print('inside setChat history $data');
-    chatHistory = data;
+    // chatHistory = data;
   }
 
   void socketClient(IO.Socket socket) {
@@ -118,14 +120,35 @@ class SocketModel extends ConnectedModel {
     });
     // nsSocket.connect();
     mainNsSocket = nsSocket;
-    await nsSocket.on('chatRoomsList', (chats) {
+    await nsSocket.on('chatRoomsList', (chatRooms) {
       // print('chatRoomList Data length:  ${chats.length}');
-      print(chats);
-      List chatList = [];
-      chats.forEach((chat) {
-        chatList.add(chat);
+      print(chatRooms);
+      List<Chats> chatRoomList = [];
+
+      chatRooms.forEach((room) {
+        MessageSeenEnum seenenum;
+        if (room['messageSeenEnum'] == 'seen') {
+          seenenum = MessageSeenEnum.SEEN;
+        } else if (room['messageSeenEnum'] == 'unseen') {
+          seenenum = MessageSeenEnum.NOT_SEEN;
+        } else if (room['messageSeenEnum'] == 'none') {
+          seenenum = MessageSeenEnum.NONE;
+        } else {
+          seenenum = MessageSeenEnum.RECEIVED;
+        }
+        final chatRoom = Chats(
+            lastMessage: room['lastMessage'],
+            messageSeenEnum: seenenum,
+            messages: [],
+            nameUser: room['username'],
+            online: false,
+            time: room['time'],
+            unSeenMessages: room['unseenMessages'],
+            unSeenMessagesCount: room['unseenMessagesCount'].toString(),
+            urlPhotoUser: room['avatar']);
+        chatRoomList.add(chatRoom);
       });
-      setChats(chatList);
+      setChats(chatRoomList);
     });
   }
 

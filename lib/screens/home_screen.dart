@@ -196,6 +196,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               return MemeCard(
                   index: index,
                   model: widget.model,
+                  feedList: feedList,
                   onMemeIndexSelect: (int index) {
                     showBottomSheet(context, index);
                   }); // Add Card

@@ -15,8 +15,9 @@ import 'package:flutter_blurhash/flutter_blurhash.dart';
 class MemeCard extends StatefulWidget {
   final index;
   final MainModel model;
+  final List feedList;
   final IntCallback onMemeIndexSelect;
-  MemeCard({this.index, this.model, this.onMemeIndexSelect});
+  MemeCard({this.index, this.model, this.feedList, this.onMemeIndexSelect});
   // final Meme meme;
   static double viewportHeight;
   static double viewportWidth;
@@ -34,7 +35,8 @@ class _MemeCardState extends State<MemeCard> {
 
   @override
   void initState() {
-    meme = widget.model.getFeedList[widget.index];
+    // meme = widget.model.getFeedList[widget.index];
+    meme = widget.feedList[widget.index];
     isLiked = false;
     checkLiked();
     super.initState();
@@ -66,11 +68,11 @@ class _MemeCardState extends State<MemeCard> {
     MemeCard.viewportWidth = getViewportWidth(context);
     return ScopedModelDescendant(
       builder: (BuildContext context, Widget child, MainModel model) {
-        model.addListener(() {
-          setState(() {
-            meme = widget.model.getFeedList[widget.index];
-          });
-        });
+        // model.addListener(() {
+        //   setState(() {
+        //     meme = widget.model.getFeedList[widget.index];
+        //   });
+        // });
         return Card(
           color: Theme.of(context).cardColor,
           elevation: 3,
@@ -140,9 +142,10 @@ class _MemeCardState extends State<MemeCard> {
                     color: Theme.of(context).accentColor,
                   ),
                   onPressed: () {
-                    setState(() {
-                      meme = widget.model.getFeedList[widget.index];
-                    });
+                    print(meme.avatar);
+                    // setState(() {
+                    //   meme = widget.model.getFeedList[widget.index];
+                    // });
                   },
                 ),
               ),

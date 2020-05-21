@@ -23,16 +23,14 @@ class Message {
   final String message;
   final String userId;
   final String username;
-  final String avatar;
   final String mediaLink;
-  final MessageSenderEnum messageSenderEnum;
+  // final MessageSenderEnum messageSenderEnum;
   final String time;
 
   Message({
     this.message,
-    this.messageSenderEnum,
+    // this.messageSenderEnum,
     this.time,
-    this.avatar,
     this.mediaLink,
     this.userId,
     this.username,
