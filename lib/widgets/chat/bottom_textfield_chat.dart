@@ -1,10 +1,13 @@
+import 'package:battle_me/scoped_models/main_scoped_model.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 
 class BottomTextFieldChat extends StatefulWidget {
   final Function onPressed;
+  final MainModel model;
 
-  const BottomTextFieldChat({Key key, this.onPressed}) : super(key: key);
+  const BottomTextFieldChat({Key key, this.onPressed, this.model})
+      : super(key: key);
 
   @override
   _BottomTextFieldChatState createState() => _BottomTextFieldChatState();
@@ -38,7 +41,7 @@ class _BottomTextFieldChatState extends State<BottomTextFieldChat> {
                 icon: Icon(Icons.send),
                 onPressed: _onPressed,
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -46,7 +49,7 @@ class _BottomTextFieldChatState extends State<BottomTextFieldChat> {
   }
 
   _onPressed() {
-    widget.onPressed(message.text);
+    widget.onPressed(message.text, widget.model);
     message.text = "";
   }
 }

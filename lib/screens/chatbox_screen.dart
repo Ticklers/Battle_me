@@ -1,6 +1,6 @@
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
 import 'package:flutter/material.dart';
-import 'package:battle_me/models/chats.dart';
+// import 'package:battle_me/models/chats.dart';
 // import 'package:battle_me/widgets/chats/bottom_appbar_chats.dart';
 // import 'package:battle_me/widgets/chats/floating_action_button_chats.dart';
 import 'package:battle_me/widgets/chats/tile_chats.dart';

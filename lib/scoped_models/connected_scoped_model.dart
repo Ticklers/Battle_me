@@ -17,7 +17,7 @@ class ConnectedModel extends Model {
   List<Meme> user_meme = [];
   bool isUserAuthenticated = false;
   IO.Socket mainSocket;
-  IO.Socket mainNsSocket;
+  // IO.Socket mainNsSocket;
   bool newFeed = false;
   List<Chats> chats = null;
   // List chatHistory = null;

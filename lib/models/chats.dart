@@ -1,8 +1,9 @@
 import 'package:battle_me/enums/MessageSeenEnum.dart';
-import 'package:battle_me/enums/MessageSenderEnum.dart';
+// import 'package:battle_me/enums/MessageSenderEnum.dart';
 import 'package:battle_me/models/message.dart';
 
 class Chats {
+  String roomId;
   bool online;
   String nameUser;
   String urlPhotoUser;
@@ -14,7 +15,8 @@ class Chats {
   List<Message> messages;
 
   Chats({
-    this.online = false,
+    this.roomId,
+    this.online,
     this.nameUser,
     this.urlPhotoUser,
     this.lastMessage,
@@ -29,6 +31,7 @@ class Chats {
 List<Chats> chatList = [
   Chats(
       lastMessage: 'this is a last message',
+      roomId: 'wiehdsjue',
       messageSeenEnum: MessageSeenEnum.SEEN,
       nameUser: 'Ishan',
       online: true,
@@ -55,6 +58,7 @@ List<Chats> chatList = [
   Chats(
       lastMessage: 'this is also last message',
       messageSeenEnum: MessageSeenEnum.RECEIVED,
+      roomId: 'wiehdheue',
       nameUser: 'Rachit',
       online: false,
       time: '11:11',

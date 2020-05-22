@@ -17,7 +17,7 @@
 //   });
 // }
 
-import 'package:battle_me/enums/MessageSenderEnum.dart';
+// import 'package:battle_me/enums/MessageSenderEnum.dart';
 
 class Message {
   final String message;

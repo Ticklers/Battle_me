@@ -5,13 +5,23 @@ import 'dart:async';
 import 'package:battle_me/enums/MessageSeenEnum.dart';
 import 'package:battle_me/models/chats.dart';
 import 'package:battle_me/models/meme.dart';
+import 'package:battle_me/models/message.dart';
 
 import './connected_scoped_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketModel extends ConnectedModel {
+  IO.Socket mainNsSocket;
+  IO.Socket get getMainNsSocket {
+    return mainNsSocket;
+  }
+
   void setSocket(IO.Socket socket) {
     mainSocket = socket;
+  }
+
+  void setNsSocket(IO.Socket nsSocket) {
+    mainNsSocket = nsSocket;
   }
 
   void setFeedList(List<Meme> data) {
@@ -22,21 +32,16 @@ class SocketModel extends ConnectedModel {
     chats = chatList;
   }
 
-  void setChatHistory(List data) {
-    print('inside setChat history $data');
-    // chatHistory = data;
-  }
-
   void socketClient(IO.Socket socket) {
-    print('Inside socketClient');
-    socket.on('connection', (_) {
-      print('connect!!!!!!!!!!!!!!!');
-      //  socket.emit('msg', 'test');
-    });
+    // print('Inside socketClient');
+    // socket.on('connection', (_) {
+    //   print('connect!!!!!!!!!!!!!!!');
+    //   //  socket.emit('msg', 'test');
+    // });
     socket.emit('getFeed');
     socket.on('memes', (data) {
       List<Meme> allMemes = [];
-      print('received Socket data: ${data["data"]["count"]}');
+      // print('received Socket data: ${data["data"]["count"]}');
       data["data"]["memes"].forEach((dynamic memeData) {
         final Meme entry = Meme(
           memeId: memeData['_id'],
@@ -58,8 +63,8 @@ class SocketModel extends ConnectedModel {
     });
 
     socket.on('newFeed', (data) {
-      print('NewFeed Triggered');
-      print(data);
+      // print('NewFeed Triggered');
+      // print(data);
       final Meme entry = Meme(
         memeId: data['_id'],
         name: data['name'],
@@ -80,14 +85,14 @@ class SocketModel extends ConnectedModel {
   }
 
   Future<Null> liveFeedFetch(IO.Socket socket) async {
-    print('Inside liveFeed fetch');
+    // print('Inside liveFeed fetch');
 
     socket.emit('getFeed');
     notifyListeners();
   }
 
   Future<Null> newPostAdd(IO.Socket socket, post) async {
-    print('Inside newPost add');
+    // print('Inside newPost add');
     final entry = {
       "memeId": "",
       "name": post['name'],
@@ -105,24 +110,28 @@ class SocketModel extends ConnectedModel {
   }
 
   Future<Null> joinNs(String endpoint) async {
-    if (mainNsSocket != null) {
-      print(mainNsSocket);
+    if (getMainNsSocket != null) {
+      mainNsSocket.on('reconnect', (data) {
+        // print('Reconnect ho gya!!!!!!!!!!!!!');
+      });
+      // print('NsSocket closed : $mainNsSocket');
       mainNsSocket.close();
-      mainNsSocket = null;
-      print('closing namespace!');
-      print(mainNsSocket);
+      // mainNsSocket = null;
+      setNsSocket(null);
+      // print(mainNsSocket);
     }
-    print('Inside joinNs : ${endpoint}');
+    // print('Inside joinNs : ${endpoint}');
     IO.Socket nsSocket =
         IO.io('http://192.168.43.197:5000${endpoint}', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
     });
     // nsSocket.connect();
-    mainNsSocket = nsSocket;
+    // mainNsSocket = nsSocket;
+    setNsSocket(nsSocket);
     await nsSocket.on('chatRoomsList', (chatRooms) {
       // print('chatRoomList Data length:  ${chats.length}');
-      print(chatRooms);
+      // print(chatRooms);
       List<Chats> chatRoomList = [];
 
       chatRooms.forEach((room) {
@@ -138,10 +147,11 @@ class SocketModel extends ConnectedModel {
         }
         final chatRoom = Chats(
             lastMessage: room['lastMessage'],
+            roomId: room['roomId'],
             messageSeenEnum: seenenum,
             messages: [],
             nameUser: room['username'],
-            online: false,
+            online: room['online'],
             time: room['time'],
             unSeenMessages: room['unseenMessages'],
             unSeenMessagesCount: room['unseenMessagesCount'].toString(),
@@ -152,11 +162,12 @@ class SocketModel extends ConnectedModel {
     });
   }
 
-  void joinChatRoom(String roomToJoin) {
+  void joinChatRoom(String joinRoomId) {
     // if (mainNsSocket != null) {
     //   mainNsSocket.close();
     // }
-    print('Inside joinChatRoom : ${roomToJoin}');
+    // print('Inside joinChatRoom : ${joinRoomId}');
+    // print(getMainNsSocket);
     // IO.Socket nsSocket =
     //     IO.io('http://192.168.43.197:5000${endpoint}', <String, dynamic>{
     //   'transports': ['websocket'],
@@ -164,13 +175,31 @@ class SocketModel extends ConnectedModel {
     // });
     // nsSocket.connect();
     // mainNsSocket = nsSocket;
-    mainNsSocket.emit('joinRoom', roomToJoin);
+    mainNsSocket.emit('joinRoom', joinRoomId);
     mainNsSocket.on('chatData', (data) {
-      print('Inside chatData:  $data');
+      // print('Inside chatData:  $data');
       // chatHistory = data;
-      setChatHistory(data['chatHistory']);
+      Chats chatroom = chats.firstWhere((room) {
+        return room.roomId == data['roomId'];
+      });
+      final List<Message> chatList = [];
+      data['messages'].forEach((message) {
+        final chatHistory = new Message(
+            mediaLink: message['mediaLink'],
+            message: message['message'],
+            time: message['time'],
+            userId: message['userId'],
+            username: message['username']);
+        chatList.add(chatHistory);
+      });
+      chatroom.messages = chatList;
     });
     // return chatlist;
+  }
+
+  void messageToServer(String message) {
+    // print('message to server : $message');
+    mainNsSocket.emit('messageToServer', message);
   }
 
   // void disconectNamespace() {
