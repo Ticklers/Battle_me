@@ -8,7 +8,6 @@ import './connected_scoped_model.dart';
 // import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class UserModel extends ConnectedModel {
-  User authenticatedUser = null;
   User get getAuthenticatedUser {
     print('Inside get authenticated User');
     return authenticatedUser;
@@ -110,7 +109,7 @@ class UserModel extends ConnectedModel {
     }
   }
 
-  Future<Null> autoAuthenticate() async {
+  Future<bool> autoAuthenticate() async {
     print('Inside autoAuthenticate');
     isLoading = true;
     bool isAuthenticated = false;
@@ -125,7 +124,9 @@ class UserModel extends ConnectedModel {
       isAuthenticated = await setAuthenticatedUser(userId, token);
       print('authentication is  $isAuthenticated');
       notifyListeners();
-      return;
+      return true;
+    } else {
+      return false;
     }
   }
 

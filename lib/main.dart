@@ -14,22 +14,16 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 void main() {
   // debugPaintSizeEnabled = true;
   // Dart client
-  print('Inside socketConnect');
-  IO.Socket socket = IO.io('http://192.168.43.197:5000', <String, dynamic>{
-    'transports': ['websocket'],
-    'autoConnect': true,
-    'query': {"username": "Rishabh"}, // optional
-  });
+  // print('Inside socketConnect');
   // socket.connect();
   // SocketModel socketModel = SocketModel();
   // socketModel.socketClient(socket);
 
-  runApp(MyApp(socket));
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  final IO.Socket socket;
-  MyApp(this.socket);
+  MyApp();
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -39,9 +33,20 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    _model.setSocket(widget.socket);
-    _model.socketClient(widget.socket);
-    _model.autoAuthenticate();
+    _model.autoAuthenticate().then((value) {
+      if (value) {
+        print('socket connected');
+        IO.Socket socket =
+            IO.io('http://192.168.43.197:5000', <String, dynamic>{
+          'transports': ['websocket'],
+          'autoConnect': true,
+          'query': {"token": "Rishabh"}, // optional
+        });
+
+        _model.setSocket(socket);
+        _model.socketClient(socket);
+      }
+    });
     _model.fetchMeme('feed');
     super.initState();
   }

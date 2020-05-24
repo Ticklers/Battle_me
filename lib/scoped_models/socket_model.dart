@@ -39,7 +39,38 @@ class SocketModel extends ConnectedModel {
     //   //  socket.emit('msg', 'test');
     // });
     socket.emit('getFeed');
-    socket.emit('getChatRoomData');
+
+    socket.emit('getChatRoomData', authenticatedUser.username);
+    socket.on('chatRoomsToClient', (chatRooms) {
+      print('Chat rooms received: $chatRooms');
+
+      Chats newChat = Chats(
+          lastMessage: 'this is a last message',
+          roomId: 'wiehdsjue',
+          messageSeenEnum: MessageSeenEnum.SEEN,
+          nameUser: 'Ishan',
+          online: true,
+          time: '21:11',
+          unSeenMessages: true,
+          unSeenMessagesCount: '1',
+          urlPhotoUser:
+              'https://firebasestorage.googleapis.com/v0/b/cracknet-app.appspot.com/o/images%2Fprofile_pic.jpg?alt=media&token=c03d6b53-9286-4958-9e42-3262d6ad45c3',
+          messages: [
+            Message(
+              mediaLink: null,
+              message: 'Hello buddy! You are doing really a nice job!',
+              time: '12:12',
+              userId: 'friend',
+              username: 'Ishan',
+            ),
+            Message(
+                mediaLink: null,
+                message: 'Thanks for your kind words',
+                time: '12:15',
+                userId: 'rishabh',
+                username: 'Rishabh')
+          ]);
+    });
     socket.on('memes', (data) {
       List<Meme> allMemes = [];
       // print('received Socket data: ${data["data"]["count"]}');

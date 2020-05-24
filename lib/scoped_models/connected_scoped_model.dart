@@ -1,5 +1,6 @@
 import 'package:battle_me/models/chats.dart';
 import 'package:battle_me/models/meme.dart';
+import 'package:battle_me/models/user.dart';
 
 import '../api/keys.dart';
 import 'dart:io';
@@ -8,6 +9,8 @@ import 'package:scoped_model/scoped_model.dart';
 
 class ConnectedModel extends Model {
   final uri = ApiKeys.uri;
+
+  User authenticatedUser = null;
   bool isLoading = false;
   File file = null;
   int bottom_navbar_index = 0;
@@ -19,6 +22,6 @@ class ConnectedModel extends Model {
   IO.Socket mainSocket;
   // IO.Socket mainNsSocket;
   // bool newFeed = false;
-  List<Chats> chats = null;
+  List<Chats> chats = [];
   // List chatHistory = null;
 }

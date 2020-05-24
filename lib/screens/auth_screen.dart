@@ -7,6 +7,7 @@ import 'package:battle_me/widgets/animations/navigation_animation.dart';
 import 'package:battle_me/widgets/animations/teddy_animation.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class AuthScreen extends StatefulWidget {
   final MainModel model;
@@ -176,6 +177,16 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       if (isAuthenticated) {
         animation = 'success';
+
+        IO.Socket socket =
+            IO.io('http://192.168.43.197:5000', <String, dynamic>{
+          'transports': ['websocket'],
+          'autoConnect': true,
+          'query': {"token": "Rishabh"}, // optional
+        });
+
+        widget.model.setSocket(socket);
+        widget.model.socketClient(socket);
         Timer(Duration(milliseconds: 1500), () {
           isLoading = false;
           Navigator.pushReplacement(
