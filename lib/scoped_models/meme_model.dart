@@ -25,7 +25,7 @@ class MemeModel extends ConnectedModel {
   Future<Null> fetchMeme(String listType) async {
     isLoading = true;
     notifyListeners();
-    print('Inside fetch Meme');
+    // print('Inside fetch Meme');
     return await http
         .get(uri + 'api/memes/all')
         .then<Null>((http.Response response) {
@@ -38,7 +38,6 @@ class MemeModel extends ConnectedModel {
           return;
         }
         memeListData['memes'].forEach((dynamic memeData) {
-          print(memeData['mediaHash']);
           final Meme entry = Meme(
             memeId: memeData['_id'],
             name: memeData['name'],
@@ -56,8 +55,6 @@ class MemeModel extends ConnectedModel {
         });
         meme_feed = fetchedMemeList;
         print(meme_feed.length);
-        print(meme_feed[0].mediaHash);
-        print('fetch meme ends');
         isLoading = false;
         notifyListeners();
       } else {
@@ -111,7 +108,7 @@ class MemeModel extends ConnectedModel {
       {String comment, String memeId, String token}) async {
     isLoading = true;
     notifyListeners();
-    print('Inside comment meme : ' + isLoading.toString());
+    // print('Inside comment meme : ' + isLoading.toString());
     Map<String, dynamic> req = {'comment': comment};
     // print(req);
     try {
@@ -124,10 +121,10 @@ class MemeModel extends ConnectedModel {
           });
       Map<String, dynamic> res = json.decode(response.body);
       ;
-      print(res);
+      // print(res);
       if (response.statusCode == 200) {
         res = json.decode(response.body);
-        print(res);
+        // print(res);
 
         isLoading = false;
         notifyListeners();
@@ -143,7 +140,7 @@ class MemeModel extends ConnectedModel {
   }
 
   Future<Null> likeMeme({String memeId, String token}) async {
-    print('Inside Like meme');
+    // print('Inside Like meme');
     try {
       http.Response response =
           await http.post('${uri}api/addons/like/${memeId}', headers: {
@@ -152,7 +149,7 @@ class MemeModel extends ConnectedModel {
       });
       Map<String, dynamic> res = json.decode(response.body);
       ;
-      print(res);
+      // print(res);
       if (response.statusCode == 200) {
         res = json.decode(response.body);
         // print(res);
@@ -165,7 +162,7 @@ class MemeModel extends ConnectedModel {
   }
 
   Future<Null> unlikeMeme({String memeId, String token}) async {
-    print('Inside unLike meme');
+    // print('Inside unLike meme');
     try {
       http.Response response =
           await http.post('${uri}api/addons/unlike/${memeId}', headers: {
@@ -175,7 +172,7 @@ class MemeModel extends ConnectedModel {
       Map<String, dynamic> res = json.decode(response.body);
       if (response.statusCode == 200) {
         res = json.decode(response.body);
-        print(res);
+        // print(res);
       }
       return;
     } catch (error) {

@@ -39,6 +39,7 @@ class SocketModel extends ConnectedModel {
     //   //  socket.emit('msg', 'test');
     // });
     socket.emit('getFeed');
+    socket.emit('getChatRoomData');
     socket.on('memes', (data) {
       List<Meme> allMemes = [];
       // print('received Socket data: ${data["data"]["count"]}');
@@ -63,7 +64,7 @@ class SocketModel extends ConnectedModel {
     });
 
     socket.on('newFeed', (data) {
-      // print('NewFeed Triggered');
+      print('NewFeed Triggered');
       // print(data);
       final Meme entry = Meme(
         memeId: data['_id'],
@@ -78,7 +79,7 @@ class SocketModel extends ConnectedModel {
         mediaLink: data['mediaLink'],
         mediaHash: data['mediaHash'],
       );
-      newFeed = true;
+      // newFeed = true;
       meme_feed.insert(0, entry);
       notifyListeners();
     });
@@ -163,18 +164,6 @@ class SocketModel extends ConnectedModel {
   }
 
   void joinChatRoom(String joinRoomId) {
-    // if (mainNsSocket != null) {
-    //   mainNsSocket.close();
-    // }
-    // print('Inside joinChatRoom : ${joinRoomId}');
-    // print(getMainNsSocket);
-    // IO.Socket nsSocket =
-    //     IO.io('http://192.168.43.197:5000${endpoint}', <String, dynamic>{
-    //   'transports': ['websocket'],
-    //   'autoConnect': true,
-    // });
-    // nsSocket.connect();
-    // mainNsSocket = nsSocket;
     mainNsSocket.emit('joinRoom', joinRoomId);
     mainNsSocket.on('chatData', (data) {
       // print('Inside chatData:  $data');
@@ -194,7 +183,6 @@ class SocketModel extends ConnectedModel {
       });
       chatroom.messages = chatList;
     });
-    // return chatlist;
   }
 
   void messageToServer(String message) {

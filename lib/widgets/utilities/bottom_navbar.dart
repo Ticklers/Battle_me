@@ -71,7 +71,7 @@ class BottomNavbar extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           PageTransition(
-                            child: TrendingScreen(model),
+                            child: TrendingScreen(),
                             type: PageTransitionType.fade,
                             duration: Duration(milliseconds: 300),
                           ),

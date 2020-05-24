@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
         routes: {
           '/': (BuildContext context) => SplashScreen(_model),
           '/home': (BuildContext context) => HomeScreen(_model),
-          '/trend': (BuildContext context) => TrendingScreen(_model),
+          '/trend': (BuildContext context) => TrendingScreen(),
           '/profile': (BuildContext context) => ProfileScreen(_model),
           '/battle': (BuildContext context) => BattleScreen(),
         },

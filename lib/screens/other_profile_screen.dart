@@ -2,6 +2,7 @@ import 'package:battle_me/models/user.dart';
 import 'package:battle_me/widgets/utilities/meme_card.dart';
 import 'package:flutter/material.dart';
 import 'package:battle_me/helpers/dimensions.dart';
+import 'package:intl/intl.dart';
 import 'package:progressive_image/progressive_image.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -51,14 +52,14 @@ class _OtherProfileScreenState extends State<OtherProfileScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: getViewportHeight(context),
-            width: getDeviceWidth(context),
-            child: ScopedModelDescendant<MainModel>(
-              builder: (BuildContext context, Widget child, MainModel model) {
-                return Column(
+      body: ScopedModelDescendant<MainModel>(
+        builder: (context, child, model) {
+          return Stack(
+            children: <Widget>[
+              Container(
+                height: getViewportHeight(context),
+                width: getDeviceWidth(context),
+                child: Column(
                   children: <Widget>[
                     Container(
                       height: getViewportHeight(context) * 0.35,
@@ -273,7 +274,13 @@ class _OtherProfileScreenState extends State<OtherProfileScreen>
                                       itemBuilder:
                                           (BuildContext context, int index) {
                                         return MemeCard(
-                                            index: index, model: widget.model);
+                                          index: index,
+                                          model: widget.model,
+                                          feedList: widget.model.getFeedList,
+                                          onMemeIndexSelect: (int index) {
+                                            print(index);
+                                          },
+                                        );
                                       },
                                       itemCount:
                                           widget.model.getFeedList.length,
@@ -311,118 +318,146 @@ class _OtherProfileScreenState extends State<OtherProfileScreen>
                                 ),
                               )),
                   ],
-                );
-              },
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.more_vert,
-                        color: Theme.of(context).accentColor,
-                      ),
-                      onPressed: null,
-                    ),
-                  ],
                 ),
               ),
-              SizedBox(
-                height: getViewportHeight(context) * 0.09,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Container(
-                  height: getViewportHeight(context) * 0.19,
-                  // color: Colors.yellow,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          height: getViewportHeight(context) * 0.22,
-                          // color: Colors.yellow,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                flex: 6,
-                                child: Container(
-                                  width: getViewportWidth(context) * 0.55,
-                                  child: ListTile(
-                                    title: Text(
-                                      currentUser.name,
-                                      style: TextStyle(
-                                          fontSize: getViewportHeight(context) *
-                                              0.036),
-                                    ),
-                                    subtitle: Text(
-                                      currentUser.username,
-                                      style: TextStyle(
-                                          fontSize: getViewportHeight(context) *
-                                              0.02),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Expanded(
-                                flex: 4,
-                                child: Text(
-                                  'Less Perfection, More Authencity.',
-                                  overflow: TextOverflow.fade,
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: getViewportHeight(context) * 0.02,
-                                  ),
-                                ),
-                              ),
-                            ],
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 30, left: 10, right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_back,
                           ),
+                          onPressed: () => Navigator.pop(context),
                         ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          children: <Widget>[
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  getViewportHeight(context) * 018),
-                              child: ProgressiveImage.assetNetwork(
-                                placeholder:
-                                    'assets/images/wallpaper.jpg', // gifs can be used
-                                thumbnail: currentUser.avatar,
-                                image: currentUser.avatar,
-                                height: getViewportHeight(context) * 0.18,
-                                width: getViewportHeight(context) * 0.18,
+                        IconButton(
+                          icon: Icon(
+                            Icons.more_vert,
+                            color: Theme.of(context).accentColor,
+                          ),
+                          onPressed: () {
+                            // will create a chatroom
+                            _chatRoomCreate(model);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: getViewportHeight(context) * 0.09,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Container(
+                      height: getViewportHeight(context) * 0.19,
+                      // color: Colors.yellow,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              height: getViewportHeight(context) * 0.22,
+                              // color: Colors.yellow,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 6,
+                                    child: Container(
+                                      width: getViewportWidth(context) * 0.55,
+                                      child: ListTile(
+                                        title: Text(
+                                          currentUser.name,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  getViewportHeight(context) *
+                                                      0.036),
+                                        ),
+                                        subtitle: Text(
+                                          currentUser.username,
+                                          style: TextStyle(
+                                              fontSize:
+                                                  getViewportHeight(context) *
+                                                      0.02),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Expanded(
+                                    flex: 4,
+                                    child: Text(
+                                      'Less Perfection, More Authencity.',
+                                      overflow: TextOverflow.fade,
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize:
+                                            getViewportHeight(context) * 0.02,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              children: <Widget>[
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                      getViewportHeight(context) * 018),
+                                  child: ProgressiveImage.assetNetwork(
+                                    placeholder:
+                                        'assets/images/wallpaper.jpg', // gifs can be used
+                                    thumbnail: currentUser.avatar,
+                                    image: currentUser.avatar,
+                                    height: getViewportHeight(context) * 0.18,
+                                    width: getViewportHeight(context) * 0.18,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
+  }
+
+  void _chatRoomCreate(MainModel model) {
+    var user = model.getAuthenticatedUser;
+    var memberList = [
+      {
+        'userId': currentUser.userId,
+        'username': currentUser.username,
+        'avatar': currentUser.avatar,
+        'lastMessage': 'Start conversation!',
+        'lastMessageTime': DateFormat.Hm().format(DateTime.now()),
+      },
+      {
+        'userId': user.userId,
+        'username': user.username,
+        'avatar': user.avatar,
+        'lastMessage': 'Start conversation!',
+        'lastMessageTime': DateFormat.Hm().format(DateTime.now()),
+      }
+    ];
+    model.mainSocket.emit('createChatRoom', {'members': memberList});
   }
 }

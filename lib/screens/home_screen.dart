@@ -33,12 +33,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int commentIndex;
   List<Meme> feedList;
-  @override
-  void initState() {
-    // widget.model.disconectNamespace();
-    super.initState();
-    // _reloadHomeScreen();
-  }
+  bool newposts = false;
+  ScrollController _scrollController = new ScrollController();
 
   showBottomSheet(context, index) {
     List comments = widget.model.getFeedList[index].comments;
@@ -189,6 +185,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           key: refreshIndicatorKey,
           onRefresh: _reloadHomeScreen,
           child: ListView.builder(
+            controller: _scrollController,
             itemCount: feedList.length,
             padding: EdgeInsets.symmetric(horizontal: 5),
             physics: BouncingScrollPhysics(),
@@ -203,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             },
           ),
         ),
-        model.newFeed
+        newposts
             ? Positioned(
                 left: getDeviceWidth(context) / 2 - 50,
                 child: FlatButton(
@@ -214,8 +211,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   child: Text('New Posts'),
                   onPressed: () {
                     setState(() {
+                      newposts = false;
                       makeChange(model);
-                      widget.model.newFeed = false;
+                      // widget.model.newFeed = false;
                     });
                   },
                 ),
@@ -230,53 +228,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     feedList = widget.model.getFeedList;
     return ScopedModelDescendant(
       builder: (BuildContext context, Widget child, MainModel model) {
+        // newposts = false;
+        // model.mainSocket.off('newFeed');
+        model.mainSocket.on('newFeed', (data) {
+          newposts = true;
+        });
         return Scaffold(
           key: _scaffoldKey,
           // drawer: SideDrawer(),
-          appBar: AppBar(
-            leading: GestureDetector(
-              onTap: () {
-                widget.model.logout();
-                Navigator.pushReplacement(
-                  context,
-                  PageTransition(
-                    child: AuthScreen(widget.model),
-                    type: PageTransitionType.fade,
-                    duration: Duration(milliseconds: 300),
-                  ),
-                );
-              },
-              child: Hero(
-                tag: "icon",
-                child: Container(
-                  child: Image.asset('assets/images/icon.png'),
-                ),
-              ),
-            ),
-            title: Text('Tickle'),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.send,
-                  color: Theme.of(context).accentColor,
-                ),
-                onPressed: () {
-                  model.joinNs('/chat');
-                  Timer(Duration(milliseconds: 200), () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                        child: ChatsPage(),
-                        type: PageTransitionType.fade,
-                        duration: Duration(milliseconds: 300),
-                      ),
-                    );
-                  });
-                },
-              ),
-            ],
-            backgroundColor: Theme.of(context).appBarTheme.color,
-          ),
+          appBar: _getAppBar(model),
           bottomNavigationBar: BottomNavbar(0),
           body: GestureDetector(
             onTap: () {
@@ -289,21 +249,66 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
+  AppBar _getAppBar(MainModel model) {
+    return AppBar(
+      leading: GestureDetector(
+        onTap: () {
+          widget.model.logout();
+          Navigator.pushReplacement(
+            context,
+            PageTransition(
+              child: AuthScreen(widget.model),
+              type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 300),
+            ),
+          );
+        },
+        child: Hero(
+          tag: "icon",
+          child: Container(
+            child: Image.asset('assets/images/icon.png'),
+          ),
+        ),
+      ),
+      title: Text('Tickle'),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.send,
+            color: Theme.of(context).accentColor,
+          ),
+          onPressed: () {
+            model.joinNs('/chat');
+            Timer(Duration(milliseconds: 200), () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: ChatsPage(),
+                  type: PageTransitionType.fade,
+                  duration: Duration(milliseconds: 300),
+                ),
+              );
+            });
+          },
+        ),
+      ],
+      backgroundColor: Theme.of(context).appBarTheme.color,
+    );
+  }
+
   Future<Null> _reloadHomeScreen() async {
     widget.model.liveFeedFetch(widget.model.mainSocket);
-    print(widget.model.getFeedList.length);
-    // print(widget.model.mainSocket.id);
-    // await widget.model.fetchMeme('feed').then((_) {
-    //   setState(() {});
-    //   print('Meme fetched successfully!!!!!!!');
-    // });
   }
 
   makeChange(MainModel model) {
+    // print('scroll hoja');
     setState(() {
       feedList = model.getFeedList;
     });
-    // Timer(Duration(seconds: 1), () {
-    // });
+    _scrollController.animateTo(
+      0.0,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 600),
+    );
   }
 }
