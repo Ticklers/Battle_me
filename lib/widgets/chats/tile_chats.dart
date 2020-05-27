@@ -9,21 +9,26 @@ import 'package:flutter/material.dart';
 import 'package:battle_me/screens/chat_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class TilesChats extends StatelessWidget {
+class TilesChats extends StatefulWidget {
   final Chats chats;
   final bool lastChat;
 
   const TilesChats({Key key, this.chats, this.lastChat}) : super(key: key);
 
   @override
+  _TilesChatsState createState() => _TilesChatsState();
+}
+
+class _TilesChatsState extends State<TilesChats> {
+  @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (context, child, model) {
         return InkWell(
           onTap: () {
-            model.joinChatRoom(chats.roomId);
+            model.joinChatRoom(widget.chats.roomId);
             Timer(Duration(milliseconds: 300), () {
-              _goToChatPage(chats, context, model);
+              _goToChatPage(widget.chats, context, model);
             });
           },
           child: Column(
@@ -56,12 +61,12 @@ class TilesChats extends StatelessWidget {
                                   Positioned.fill(
                                     child: CircleAvatar(
                                       backgroundImage: NetworkImage(
-                                        chats.urlPhotoUser,
+                                        widget.chats.urlPhotoUser,
                                       ),
                                       backgroundColor: Colors.grey[200],
                                     ),
                                   ),
-                                  chats.online
+                                  widget.chats.online
                                       ? Align(
                                           alignment: Alignment.topRight,
                                           child: Container(
@@ -89,7 +94,7 @@ class TilesChats extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    chats.nameUser,
+                                    widget.chats.nameUser,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         color: Colors.white.withOpacity(0.7),
@@ -101,17 +106,17 @@ class TilesChats extends StatelessWidget {
                                   ),
                                   Row(
                                     children: <Widget>[
-                                      chats.messageSeenEnum ==
+                                      widget.chats.messageSeenEnum ==
                                               MessageSeenEnum.NONE
                                           ? Container()
                                           : Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 3),
-                                              child: _buildMessaSeenIcon(
-                                                  chats.messageSeenEnum)),
+                                              child: _buildMessaSeenIcon(widget
+                                                  .chats.messageSeenEnum)),
                                       Expanded(
                                         child: Text(
-                                          chats.lastMessage,
+                                          widget.chats.lastMessage,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color:
@@ -135,7 +140,7 @@ class TilesChats extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          chats.time,
+                          widget.chats.time,
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.3),
                             fontWeight: FontWeight.w400,
@@ -145,7 +150,7 @@ class TilesChats extends StatelessWidget {
                         SizedBox(
                           height: 3,
                         ),
-                        chats.unSeenMessages
+                        widget.chats.unSeenMessages
                             ? Container(
                                 alignment: Alignment.center,
                                 height: 20,
@@ -154,7 +159,7 @@ class TilesChats extends StatelessWidget {
                                     color: Colors.blueAccent[400],
                                     shape: BoxShape.circle),
                                 child: Text(
-                                  chats.unSeenMessagesCount,
+                                  widget.chats.unSeenMessagesCount,
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 12),
                                 ),
@@ -168,7 +173,7 @@ class TilesChats extends StatelessWidget {
                   ],
                 ),
               ),
-              lastChat
+              widget.lastChat
                   ? SizedBox(
                       height: 20,
                     )

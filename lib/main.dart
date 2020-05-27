@@ -35,12 +35,15 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     _model.autoAuthenticate().then((value) {
       if (value) {
-        print('socket connected');
+        print(
+            'socket connected and username is: ${_model.getAuthenticatedUser.username}');
         IO.Socket socket =
             IO.io('http://192.168.43.197:5000', <String, dynamic>{
           'transports': ['websocket'],
           'autoConnect': true,
-          'query': {"token": "Rishabh"}, // optional
+          'query': {
+            "username": _model.getAuthenticatedUser.username
+          }, // optional
         });
 
         _model.setSocket(socket);

@@ -21,7 +21,5 @@ class ConnectedModel extends Model {
   bool isUserAuthenticated = false;
   IO.Socket mainSocket;
   // IO.Socket mainNsSocket;
-  // bool newFeed = false;
   List<Chats> chats = [];
-  // List chatHistory = null;
 }

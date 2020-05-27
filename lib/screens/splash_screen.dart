@@ -35,6 +35,8 @@ class _SplashScreenState extends State<SplashScreen>
         curve: Curves.elasticInOut,
       ),
     );
+
+    // Timer set to load authenticateduser and navigate
     Timer(Duration(seconds: 3), () {
       widget.model.isUserAuthenticated
           ? Navigator.pushReplacement(
@@ -55,53 +57,54 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
-        body: Container(
-          // decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-          child: Stack(children: <Widget>[
-            SlideTransition(
-              position: _offsetAnimation,
-              child: Container(
-                alignment: Alignment.topCenter,
-                child: Hero(
-                  tag: "icon",
-                  child: Container(
-                    height: getDeviceHeight(context) * 0.60,
-                    width: getDeviceWidth(context) * 0.60,
-                    child: Image.asset('assets/images/icon.png'),
-                  ),
+      backgroundColor: Colors.black,
+      body: Container(
+        // decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+        child: Stack(children: <Widget>[
+          SlideTransition(
+            position: _offsetAnimation,
+            child: Container(
+              alignment: Alignment.topCenter,
+              child: Hero(
+                tag: "icon",
+                child: Container(
+                  height: getDeviceHeight(context) * 0.60,
+                  width: getDeviceWidth(context) * 0.60,
+                  child: Image.asset('assets/images/icon.png'),
                 ),
               ),
             ),
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(top: getViewportHeight(context) * 0.6),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Tickle',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "Manrope",
-                          fontSize: getDeviceHeight(context) * 0.06,
-                          fontWeight: FontWeight.w700),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: getDeviceHeight(context) * 0.05),
-                    Text(
-                      "Have Fun ! \n Why so serious ?",
-                      style: TextStyle(
-                          fontFamily: "Ubuntu",
-                          color: Colors.white,
-                          fontSize: getDeviceHeight(context) * 0.03),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
+          ),
+          Center(
+            child: Container(
+              margin: EdgeInsets.only(top: getViewportHeight(context) * 0.6),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Tickle',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: "Manrope",
+                        fontSize: getDeviceHeight(context) * 0.06,
+                        fontWeight: FontWeight.w700),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: getDeviceHeight(context) * 0.05),
+                  Text(
+                    "Have Fun ! \n Why so serious ?",
+                    style: TextStyle(
+                        fontFamily: "Ubuntu",
+                        color: Colors.white,
+                        fontSize: getDeviceHeight(context) * 0.03),
+                    textAlign: TextAlign.center,
+                  )
+                ],
               ),
-            )
-          ]),
-        ));
+            ),
+          )
+        ]),
+      ),
+    );
   }
 
   @override

@@ -212,7 +212,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                       children: <Widget>[
                         ListView.builder(
                           itemBuilder: (BuildContext context, int index) {
-                            return MemeCard(index: index, model: widget.model);
+                            return MemeCard(
+                              index: index,
+                              model: widget.model,
+                              feedList: widget.model.getFeedList,
+                              onMemeIndexSelect: (int index) {
+                                print(index);
+                              },
+                            );
                           },
                           itemCount: widget.model.getFeedList.length,
                         ),
@@ -230,7 +237,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                         ListView.builder(
                           itemBuilder: (BuildContext context, int index) {
-                            return MemeCard(index: index, model: widget.model);
+                            return MemeCard(
+                              index: index,
+                              model: widget.model,
+                              feedList: widget.model.getFeedList,
+                              onMemeIndexSelect: (int index) {
+                                print(index);
+                              },
+                            );
                           },
                           itemCount: widget.model.getFeedList.length,
                         ),

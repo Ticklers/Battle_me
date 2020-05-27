@@ -21,12 +21,12 @@ class _AuthScreenState extends State<AuthScreen> {
   double viewportHeight;
   double viewportWidth;
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Map<String, String> _loginCredentials = <String, String>{
     "email": "",
     "password": ""
   };
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isAuthenticated = true;
   bool _obscureText = true;
 
@@ -39,6 +39,68 @@ class _AuthScreenState extends State<AuthScreen> {
   void initState() {
     animation = 'idle';
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    viewportWidth = getViewportWidth(context);
+    viewportHeight = getViewportHeight(context);
+    return Scaffold(
+      body: GestureDetector(
+        onTap: () {
+          setState(() {
+            errorMsg = "";
+            animation = 'idle';
+          });
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(5),
+          child: Stack(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 20, left: 10),
+                child: Hero(
+                  tag: "icon",
+                  child: Container(
+                    height: getDeviceHeight(context) * 0.15,
+                    width: getDeviceWidth(context) * 0.15,
+                    child: Image.asset('assets/images/icon.png'),
+                  ),
+                ),
+              ),
+              Column(
+                children: <Widget>[
+                  SizedBox(height: getViewportHeight(context) * 0.1),
+                  TeddyAnimation(animation),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      height: getViewportHeight(context) * 0.55,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        color: Theme.of(context).cardColor,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.white,
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: Offset.fromDirection(1.7))
+                        ],
+                      ),
+                      child: _authCard(),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _errorMsgContainer(double viewportHeight, double viewportWidth) {
@@ -182,7 +244,9 @@ class _AuthScreenState extends State<AuthScreen> {
             IO.io('http://192.168.43.197:5000', <String, dynamic>{
           'transports': ['websocket'],
           'autoConnect': true,
-          'query': {"token": "Rishabh"}, // optional
+          'query': {
+            "username": widget.model.getAuthenticatedUser.username
+          }, // optional
         });
 
         widget.model.setSocket(socket);
@@ -316,68 +380,6 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           _signInButtonBuilder(viewportHeight, viewportWidth),
         ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    viewportWidth = getViewportWidth(context);
-    viewportHeight = getViewportHeight(context);
-    return Scaffold(
-      body: GestureDetector(
-        onTap: () {
-          setState(() {
-            errorMsg = "";
-            animation = 'idle';
-          });
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(5),
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 20, left: 10),
-                child: Hero(
-                  tag: "icon",
-                  child: Container(
-                    height: getDeviceHeight(context) * 0.15,
-                    width: getDeviceWidth(context) * 0.15,
-                    child: Image.asset('assets/images/icon.png'),
-                  ),
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  SizedBox(height: getViewportHeight(context) * 0.1),
-                  TeddyAnimation(animation),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      height: getViewportHeight(context) * 0.55,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                        color: Theme.of(context).cardColor,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.white,
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset.fromDirection(1.7))
-                        ],
-                      ),
-                      child: _authCard(),
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

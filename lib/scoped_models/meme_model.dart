@@ -30,7 +30,7 @@ class MemeModel extends ConnectedModel {
         .get(uri + 'api/memes/all')
         .then<Null>((http.Response response) {
       if (response.statusCode == 200) {
-        print('fetch meme success');
+        // print('fetch meme success');
         final List<Meme> fetchedMemeList = [];
         final Map<String, dynamic> memeListData =
             json.decode(response.body)['response'];
@@ -75,7 +75,7 @@ class MemeModel extends ConnectedModel {
       {Map<String, dynamic> formdata, String token}) async {
     isLoading = true;
     notifyListeners();
-    print('Inside create meme : ' + isLoading.toString());
+    // print('Inside create meme : ' + isLoading.toString());
     Map<String, dynamic> req = formdata;
     // print(req);
     try {

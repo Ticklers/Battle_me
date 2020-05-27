@@ -33,44 +33,35 @@ class SocketModel extends ConnectedModel {
   }
 
   void socketClient(IO.Socket socket) {
-    // print('Inside socketClient');
     // socket.on('connection', (_) {
     //   print('connect!!!!!!!!!!!!!!!');
     //   //  socket.emit('msg', 'test');
     // });
     socket.emit('getFeed');
-
-    socket.emit('getChatRoomData', authenticatedUser.username);
+    socket.emit('getChatRoomData');
+    // get chatrooms data
     socket.on('chatRoomsToClient', (chatRooms) {
       print('Chat rooms received: $chatRooms');
-
-      Chats newChat = Chats(
-          lastMessage: 'this is a last message',
-          roomId: 'wiehdsjue',
-          messageSeenEnum: MessageSeenEnum.SEEN,
-          nameUser: 'Ishan',
-          online: true,
-          time: '21:11',
-          unSeenMessages: true,
-          unSeenMessagesCount: '1',
-          urlPhotoUser:
-              'https://firebasestorage.googleapis.com/v0/b/cracknet-app.appspot.com/o/images%2Fprofile_pic.jpg?alt=media&token=c03d6b53-9286-4958-9e42-3262d6ad45c3',
-          messages: [
-            Message(
-              mediaLink: null,
-              message: 'Hello buddy! You are doing really a nice job!',
-              time: '12:12',
-              userId: 'friend',
-              username: 'Ishan',
-            ),
-            Message(
-                mediaLink: null,
-                message: 'Thanks for your kind words',
-                time: '12:15',
-                userId: 'rishabh',
-                username: 'Rishabh')
-          ]);
+      List<Chats> fetchedChatRoomList = [];
+      chatRooms.forEach((room) {
+        Chats newChat = Chats(
+          lastMessage: room['member']['lastMessage'],
+          roomId: room['roomId'],
+          messageSeenEnum: MessageSeenEnum.NOT_SEEN,
+          nameUser: room['member']['username'],
+          online: false,
+          time: room['member']['lastMessageTime'],
+          unSeenMessages: false,
+          unSeenMessagesCount: '0',
+          urlPhotoUser: room['member']['avatar'],
+          messages: [],
+        );
+        fetchedChatRoomList.add(newChat);
+      });
+      setChats(fetchedChatRoomList);
     });
+
+    // get memes data
     socket.on('memes', (data) {
       List<Meme> allMemes = [];
       // print('received Socket data: ${data["data"]["count"]}');
@@ -94,9 +85,8 @@ class SocketModel extends ConnectedModel {
       notifyListeners();
     });
 
+    // get latest new Feed item
     socket.on('newFeed', (data) {
-      print('NewFeed Triggered');
-      // print(data);
       final Meme entry = Meme(
         memeId: data['_id'],
         name: data['name'],
@@ -119,6 +109,7 @@ class SocketModel extends ConnectedModel {
   Future<Null> liveFeedFetch(IO.Socket socket) async {
     // print('Inside liveFeed fetch');
 
+    // fetch feed
     socket.emit('getFeed');
     notifyListeners();
   }
@@ -137,73 +128,71 @@ class SocketModel extends ConnectedModel {
       "likes": post['likes'],
       "mediaLink": post['mediaLink'],
     };
+
+    // emit new feed to other users
     socket.emit('newFeed', entry);
     notifyListeners();
   }
 
   Future<Null> joinNs(String endpoint) async {
     if (getMainNsSocket != null) {
-      mainNsSocket.on('reconnect', (data) {
-        // print('Reconnect ho gya!!!!!!!!!!!!!');
-      });
-      // print('NsSocket closed : $mainNsSocket');
+      // mainNsSocket.on('reconnect', (data) {
+      //   // print('Reconnect ho gya!!!!!!!!!!!!!');
+      // });
       mainNsSocket.close();
-      // mainNsSocket = null;
       setNsSocket(null);
-      // print(mainNsSocket);
     }
     // print('Inside joinNs : ${endpoint}');
     IO.Socket nsSocket =
         IO.io('http://192.168.43.197:5000${endpoint}', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
+      'query': {"username": authenticatedUser.username}, // optional
     });
-    // nsSocket.connect();
-    // mainNsSocket = nsSocket;
     setNsSocket(nsSocket);
-    await nsSocket.on('chatRoomsList', (chatRooms) {
-      // print('chatRoomList Data length:  ${chats.length}');
-      // print(chatRooms);
-      List<Chats> chatRoomList = [];
+    // await nsSocket.on('chatRoomsList', (chatRooms) {
+    //   // print('chatRoomList Data length:  ${chats.length}');
+    //   // print(chatRooms);
+    //   List<Chats> chatRoomList = [];
 
-      chatRooms.forEach((room) {
-        MessageSeenEnum seenenum;
-        if (room['messageSeenEnum'] == 'seen') {
-          seenenum = MessageSeenEnum.SEEN;
-        } else if (room['messageSeenEnum'] == 'unseen') {
-          seenenum = MessageSeenEnum.NOT_SEEN;
-        } else if (room['messageSeenEnum'] == 'none') {
-          seenenum = MessageSeenEnum.NONE;
-        } else {
-          seenenum = MessageSeenEnum.RECEIVED;
-        }
-        final chatRoom = Chats(
-            lastMessage: room['lastMessage'],
-            roomId: room['roomId'],
-            messageSeenEnum: seenenum,
-            messages: [],
-            nameUser: room['username'],
-            online: room['online'],
-            time: room['time'],
-            unSeenMessages: room['unseenMessages'],
-            unSeenMessagesCount: room['unseenMessagesCount'].toString(),
-            urlPhotoUser: room['avatar']);
-        chatRoomList.add(chatRoom);
-      });
-      setChats(chatRoomList);
-    });
+    //   chatRooms.forEach((room) {
+    //     MessageSeenEnum seenenum;
+    //     if (room['messageSeenEnum'] == 'seen') {
+    //       seenenum = MessageSeenEnum.SEEN;
+    //     } else if (room['messageSeenEnum'] == 'unseen') {
+    //       seenenum = MessageSeenEnum.NOT_SEEN;
+    //     } else if (room['messageSeenEnum'] == 'none') {
+    //       seenenum = MessageSeenEnum.NONE;
+    //     } else {
+    //       seenenum = MessageSeenEnum.RECEIVED;
+    //     }
+    //     final chatRoom = Chats(
+    //         lastMessage: room['lastMessage'],
+    //         roomId: room['roomId'],
+    //         messageSeenEnum: seenenum,
+    //         messages: [],
+    //         nameUser: room['username'],
+    //         online: room['online'],
+    //         time: room['time'],
+    //         unSeenMessages: room['unseenMessages'],
+    //         unSeenMessagesCount: room['unseenMessagesCount'].toString(),
+    //         urlPhotoUser: room['avatar']);
+    //     chatRoomList.add(chatRoom);
+    //   });
+    //   setChats(chatRoomList);
+    // });
   }
 
   void joinChatRoom(String joinRoomId) {
     mainNsSocket.emit('joinRoom', joinRoomId);
-    mainNsSocket.on('chatData', (data) {
-      // print('Inside chatData:  $data');
+    mainNsSocket.on('chatData', (chatHistoryFromServer) {
+      print('Inside chatData:  $chatHistoryFromServer');
       // chatHistory = data;
       Chats chatroom = chats.firstWhere((room) {
-        return room.roomId == data['roomId'];
+        return room.roomId == joinRoomId;
       });
       final List<Message> chatList = [];
-      data['messages'].forEach((message) {
+      chatHistoryFromServer.forEach((message) {
         final chatHistory = new Message(
             mediaLink: message['mediaLink'],
             message: message['message'],
