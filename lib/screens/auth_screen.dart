@@ -234,8 +234,8 @@ class _AuthScreenState extends State<AuthScreen> {
     FocusScope.of(context).requestFocus(FocusNode());
     isAuthenticated = await widget.model
         .userLogin(_loginCredentials["email"], _loginCredentials["password"]);
-    print("after response");
-    print(isAuthenticated);
+    // print("after response");
+    // print(isAuthenticated);
     setState(() {
       if (isAuthenticated) {
         animation = 'success';

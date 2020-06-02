@@ -119,11 +119,11 @@ class MemeModel extends ConnectedModel {
             'Content-Type': 'application/json',
             'Authorization': token,
           });
-      Map<String, dynamic> res = json.decode(response.body);
+      // Map<String, dynamic> res = json.decode(response.body);
       ;
       // print(res);
       if (response.statusCode == 200) {
-        res = json.decode(response.body);
+        // res = json.decode(response.body);
         // print(res);
 
         isLoading = false;
@@ -147,11 +147,11 @@ class MemeModel extends ConnectedModel {
         'Content-Type': 'application/json',
         'Authorization': token,
       });
-      Map<String, dynamic> res = json.decode(response.body);
+      // Map<String, dynamic> res = json.decode(response.body);
       ;
       // print(res);
       if (response.statusCode == 200) {
-        res = json.decode(response.body);
+        // res = json.decode(response.body);
         // print(res);
       }
       return;
@@ -169,9 +169,9 @@ class MemeModel extends ConnectedModel {
         'Content-Type': 'application/json',
         'Authorization': token,
       });
-      Map<String, dynamic> res = json.decode(response.body);
+      // Map<String, dynamic> res = json.decode(response.body);
       if (response.statusCode == 200) {
-        res = json.decode(response.body);
+        // res = json.decode(response.body);
         // print(res);
       }
       return;

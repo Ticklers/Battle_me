@@ -1,4 +1,4 @@
-import 'dart:async';
+// import 'dart:async';
 
 import 'package:battle_me/models/user.dart';
 import 'package:battle_me/scoped_models/main_scoped_model.dart';
