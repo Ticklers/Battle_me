@@ -77,7 +77,6 @@ samples, guidance on mobile development, and a full API reference.
   <img src="/assets/images/tickle_splash.jpeg" width="250px" height="500px">
   <img src="/assets/images/tickle_chat2.jpeg" width="250px" height="500px">
 
-* After scanning a new report (current report) will also be generated for patient's latest visit to doctor.
 
 ## Node API
 This application is based on REST API build in node.js. API is deployed on heroku at https://agile-anchorage-04188.herokuapp.com/ . To set up the node API move to the node_api directory and run the following command in terminal/command prompt:
